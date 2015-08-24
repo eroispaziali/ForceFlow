@@ -1,0 +1,5 @@
+.project
+target/*
+target/classes/*
+*.class
+test-report*.xml

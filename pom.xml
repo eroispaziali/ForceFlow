@@ -1,0 +1,116 @@
+<project xmlns="http://maven.apache.org/POM/4.0.0" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+	xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/xsd/maven-4.0.0.xsd">
+	<modelVersion>4.0.0</modelVersion>
+	<groupId>com.spaceheroes</groupId>
+	<artifactId>forceflow</artifactId>
+	<version>0.0.6-SNAPSHOT</version>
+	<name>ForceFlow</name>
+	
+	<properties>
+		<forcecom.version>34.2.0</forcecom.version>
+		<force.api.version>35.0.0</force.api.version>
+	</properties>
+	
+	<dependencies>
+		<dependency>
+			<groupId>org.apache.ant</groupId>
+			<artifactId>ant</artifactId>
+			<version>1.9.6</version>
+		</dependency>
+		<dependency>
+		    <groupId>com.force.api</groupId>
+		    <artifactId>force-wsc</artifactId>
+		    <version>35.0.0</version>
+		</dependency>
+		<dependency>
+		    <groupId>com.force.api</groupId>
+		    <artifactId>force-partner-api</artifactId>
+		    <version>35.0.0</version>
+		</dependency>
+		<dependency>
+		    <groupId>com.force.api</groupId>
+		    <artifactId>force-apex-api</artifactId>
+		    <version>35.0.0</version>
+		</dependency>
+		<dependency>
+		    <groupId>com.force.api</groupId>
+		    <artifactId>force-metadata-api</artifactId>
+		    <version>35.0.0</version>
+		</dependency>
+		<dependency>
+			<groupId>org.apache.commons</groupId>
+			<artifactId>commons-lang3</artifactId>
+			<version>3.3.2</version>
+		</dependency>
+		<dependency>
+		    <groupId>org.simpleframework</groupId>
+		    <artifactId>simple-xml</artifactId>
+		    <version>2.7.1</version>
+		</dependency>
+		
+	</dependencies>
+	
+	<build>
+		<sourceDirectory>src</sourceDirectory>
+		<plugins>
+
+			<plugin>
+				<artifactId>maven-compiler-plugin</artifactId>
+				<version>3.0</version>
+				<configuration>
+					<source>1.5</source>
+					<target>1.5</target>
+				</configuration>
+			</plugin>
+			
+			
+		    <plugin>
+        		<artifactId>maven-assembly-plugin</artifactId>
+        		<executions>
+          			<execution>
+            			<phase>package</phase>
+            			<goals>
+              				<goal>single</goal>
+            			</goals>
+          			</execution>
+        		</executions>
+        		<configuration>
+          			<descriptorRefs>
+            			<descriptorRef>jar-with-dependencies</descriptorRef>
+          			</descriptorRefs>
+        		</configuration>
+      		</plugin>
+			
+		</plugins>
+		
+		<!-- workaround for m2e errors --> 		
+		<pluginManagement>
+			<plugins>
+			    <plugin>
+			        <groupId>org.eclipse.m2e</groupId>
+			        <artifactId>lifecycle-mapping</artifactId>
+			        <version>1.0.0</version>
+			        <configuration>
+			            <lifecycleMappingMetadata>
+			                <pluginExecutions>
+			                    <pluginExecution>
+			                        <pluginExecutionFilter>
+			                            <groupId>org.apache.maven.plugins</groupId>
+			                            <artifactId>maven-dependency-plugin</artifactId>
+			                            <versionRange>[1.0.0,)</versionRange>
+			                            <goals>
+			                                <goal>copy-dependencies</goal>
+			                            </goals>
+			                        </pluginExecutionFilter>
+			                        <action>
+			                            <ignore />
+			                        </action>
+			                    </pluginExecution>
+			                </pluginExecutions>
+			            </lifecycleMappingMetadata>
+			        </configuration>
+			    </plugin>
+			</plugins>
+		</pluginManagement>
+	</build>
+</project>
