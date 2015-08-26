@@ -49,7 +49,7 @@ You can execute an Apex script as follows.
 ### Remote Site Settings
 Use this to create or update remote site settings.
 ```XML
-<forceflow:remotesite name="Google APIs" url="https://www.googleapis.com" disableProtocolSecurity="true" username="..." password="..." serverurl="...">
+<forceflow:remotesite name="Google_APIs" url="https://www.googleapis.com" disableProtocolSecurity="true" username="..." password="..." serverurl="...">
 	Allows queries to the Google Maps API
 </forceflow:remotesite>
 ```
