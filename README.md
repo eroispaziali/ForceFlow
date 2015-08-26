@@ -10,7 +10,7 @@ It is built on top of [Apache Ant](http://ant.apache.org/), so it can be used in
 
 ## Usage
 ### Create a build file
-If you are not familiar with Ant and you need a template for your script you can copy the one below. This example already imports FlowForce.
+If you are not familiar with Ant and you need a template for your script you can copy the one below.
 ```XML
 <?xml version="1.0" encoding="UTF-8"?>
 <project name="forceflow-sample" xmlns:forceflow="antlib:com.spaceheroes">
