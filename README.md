@@ -3,12 +3,14 @@ It is built on top of [Apache Ant](http://ant.apache.org/), so it can be used in
 
 ## Features so far
 * Schedule and abort Apex jobs
+* Manage remote site settings
 * Execute Apex code
 * Run Apex tests (with XML reports)
 * Insert and delete records
 
 ## Usage
 ### Create a build file
+If you are not familiar with Ant and you need a template for your script you can copy the one below. This example already imports FlowForce.
 ```XML
 <?xml version="1.0" encoding="UTF-8"?>
 <project name="forceflow-sample" xmlns:forceflow="antlib:com.spaceheroes">
@@ -31,6 +33,7 @@ It is built on top of [Apache Ant](http://ant.apache.org/), so it can be used in
 ```
 
 ### Execute Apex code
+You can execute an Apex script as follows.
 ```XML
 <forceflow:apex username="..." password="..." serverurl="...">
 	<![CDATA[		
@@ -43,20 +46,22 @@ It is built on top of [Apache Ant](http://ant.apache.org/), so it can be used in
 </forceflow:apex>
 ```
 
+### Remote Site Settings
+Use this to create or update remote site settings.
+```XML
+<forceflow:remotesite name="Google APIs" url="https://www.googleapis.com" disableProtocolSecurity="true" username="..." password="..." serverurl="...">
+	Allows queries to the Google Maps API
+</forceflow:remotesite>
+```
+
 ### Clear scheduled jobs
-Aborts all the jobs currently scheduled. 
+Use this tag to abort all the jobs that are currently scheduled. 
 ```XML
 <forceflow:clearschedule username="..." password="..." serverurl="..." /> 	
 ```
 
-### Run all tests (with XML test report)
-Generates a full test report in the JUnit XML format (output file: _test-report.xml_). This report can be read by Atlassian Bamboo to [display test results of a build](https://confluence.atlassian.com/bamboo/viewing-test-results-for-a-build-289276936.html).
-```XML
-<forceflow:runtests username="..." password="..." serverurl="..." />
-```
-
 ### Schedule an Apex job
-You can use this to schedule the execution of a batch class.
+You can use this task to schedule the execution of a batch class.
 ```XML
 <forceflow:scheduleapex username="..." password="..." serverurl="..." className="MySchedulableClass" cron="0 0 12 1/1 * ? *" />	
 ```
@@ -72,7 +77,16 @@ Works with both objects and custom settings.
 ```
 
 ### Delete all records
-Deletes all the records from an object or a custom settings. It's bulkified, so it works also with very large tables.
+You can delete all the records from an object or a custom settings. It's bulkified, so it works also with very large tables.
 ```XML
 <forceflow:deleteall object="Contact" username="..." password="..." serverurl="..."/>
 ```
+
+### Run all tests (with XML test report)
+Generates a full test report in the JUnit XML format (output file: _test-report.xml_). This report can be read by Atlassian Bamboo to [display test results of a build](https://confluence.atlassian.com/bamboo/viewing-test-results-for-a-build-289276936.html).
+```XML
+<forceflow:runtests username="..." password="..." serverurl="..." />
+```
+
+## License
+ForceFlow is available under the MIT license. Please see the [LICENSE](LICENSE.md) for details.

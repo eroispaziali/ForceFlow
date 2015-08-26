@@ -1,9 +1,10 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <antlib>
 
-	<!-- Jobs -->
+	<!-- Other -->
 	<typedef name="clearschedule" classname="com.spaceheroes.task.ClearJobScheduleTask"/>
     <typedef name="scheduleapex" classname="com.spaceheroes.task.ScheduleJobTask" />
+    <typedef name="remotesite" classname="com.spaceheroes.task.RemoteSiteSettingsTask"/>
     
     <!-- Data -->
     <typedef name="insert" classname="com.spaceheroes.task.InsertSingleRecordTask" />
