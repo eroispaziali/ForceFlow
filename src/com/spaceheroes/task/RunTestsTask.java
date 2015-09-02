@@ -1,6 +1,9 @@
 package com.spaceheroes.task;
 
 import java.io.File;
+import java.util.Collection;
+import java.util.HashMap;
+import java.util.Map;
 
 import org.apache.tools.ant.BuildException;
 import org.simpleframework.xml.Serializer;
@@ -19,8 +22,18 @@ import com.spaceheroes.util.ConnectionFactory;
 
 public class RunTestsTask extends SalesforceTask {
 	
-	private static final String TEST_SUITE_NAME = "Salesforce Apex Test Execution";
 	private static final Integer TIME_CONVERSION_FACTOR = 1000;
+	private Map<String, TestSuite> testSuitesMap = new HashMap<String, TestSuite>();
+	
+	private TestSuite getOrCreate(String classname) {
+		TestSuite testSuite = testSuitesMap.get(classname);
+		if (testSuite==null) {
+			testSuite = new TestSuite();
+			testSuite.setName(classname);
+			testSuitesMap.put(classname, testSuite);
+		}
+		return testSuite;
+	}
 	
 	@Override
 	public void execute() throws BuildException { 
@@ -31,40 +44,40 @@ public class RunTestsTask extends SalesforceTask {
 			log("Running all tests...");
 			request.setAllTests(true);
 			RunTestsResult result = tc.runTests(request);
-			TestSuite testSuite = buildTestReport(result);
-			
-			try {
-				Serializer serializer = new Persister();
-				File source = new File("test-report.xml");
-				serializer.write(testSuite, source);
-			} catch (Exception e) {
-				log("Error: " + e);
-				e.printStackTrace();
+			Collection<TestSuite> suites = buildTestReport(result);
+			Integer i = 1;
+			for (TestSuite testSuite : suites) {
+				String filename = String.format("test-report-%s.xml", i++);
+				try {
+					Serializer serializer = new Persister();
+					File source = new File(filename);
+					serializer.write(testSuite, source);
+				} catch (Exception e) {
+					log("Error: " + e);
+					e.printStackTrace();
+				}
 			}
+			
+			
 		} catch (ConnectionException e) {
 			handleException(e);
 		}
 	}
 	
-	private TestSuite buildTestReport(RunTestsResult result) {
-		TestSuite testSuite = new TestSuite();
-		
-		testSuite.setName(TEST_SUITE_NAME);
-		testSuite.setFailures(result.getNumFailures());
-		testSuite.setErrors(0);
-		testSuite.setTests(result.getNumTestsRun());
-		testSuite.setTime(result.getTotalTime()/TIME_CONVERSION_FACTOR);
+	private Collection<TestSuite> buildTestReport(RunTestsResult result) {
 		
 		// Process all successes
 		for (RunTestSuccess testResult : result.getSuccesses()) {
+			TestSuite s = getOrCreate(testResult.getName());
 			TestCase testCase = new TestCase();
 			testCase.setName(testResult.getMethodName());
 			testCase.setTime(testResult.getTime()/TIME_CONVERSION_FACTOR);
-			testSuite.addTestCase(testCase);
+			s.addTestCase(testCase);
 		}
 		
 		// Process all failures
 		for (RunTestFailure testResult : result.getFailures()) {
+			TestSuite s = getOrCreate(testResult.getName());
 			TestCase testCase = new TestCase();
 			testCase.setName(testResult.getMethodName());
 			testCase.setTime(testResult.getTime()/TIME_CONVERSION_FACTOR);
@@ -75,10 +88,10 @@ public class RunTestsTask extends SalesforceTask {
 			testFailure.setStackTrace(testResult.getStackTrace());
 			
 			testCase.addTestFailure(testFailure);
-			testSuite.addTestCase(testCase);
+			s.addTestCase(testCase);
 		}
 		
-		return testSuite;
+		return testSuitesMap.values();
 	}
 
 }

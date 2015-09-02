@@ -47,5 +47,4 @@ public class TestCase {
 		testFailures.add(testFailure);
 	}
 	
-
 }
