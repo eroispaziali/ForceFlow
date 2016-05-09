@@ -25,7 +25,7 @@ public class RunTestsTask extends SalesforceTask {
 	
 	private static final Integer TIME_CONVERSION_FACTOR = 1000;
 	private Map<String, TestSuite> testSuitesMap = new HashMap<String, TestSuite>();
-	private String testReportsDir;
+	private String testReportsDir = "test-reports";
 	
 
 	public String getTestReportsDir() {
