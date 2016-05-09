@@ -22,7 +22,7 @@ If you are not familiar with Ant and you need a template for your script you can
 	<path id="ant.additions.classpath">
 		<fileset dir="./lib/" includes="*.jar"/>
 	</path>
-	<taskdef resource="com/spaceheroes/task/antlib.xml" uri="antlib:com.spaceheroes" classpathref="ant.additions.classpath" />
+	<taskdef resource="antlib.xml" uri="antlib:com.spaceheroes" classpathref="ant.additions.classpath" />
 	
 	<!--
 	You can now define Ant targets and 
