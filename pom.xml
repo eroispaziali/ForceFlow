@@ -3,7 +3,7 @@
 	<modelVersion>4.0.0</modelVersion>
 	<groupId>com.spaceheroes</groupId>
 	<artifactId>forceflow</artifactId>
-	<version>0.0.8-SNAPSHOT</version>
+	<version>0.1.0-SNAPSHOT</version>
 	<name>ForceFlow</name>
 	
 	<properties>
@@ -20,40 +20,51 @@
 		<dependency>
 		    <groupId>com.force.api</groupId>
 		    <artifactId>force-wsc</artifactId>
-		    <version>35.0.0</version>
+		    <version>36.0.0</version>
 		</dependency>
 		<dependency>
 		    <groupId>com.force.api</groupId>
 		    <artifactId>force-partner-api</artifactId>
-		    <version>35.0.0</version>
+		    <version>36.0.0</version>
 		</dependency>
 		<dependency>
 		    <groupId>com.force.api</groupId>
 		    <artifactId>force-apex-api</artifactId>
-		    <version>35.0.0</version>
+		    <version>36.0.0</version>
 		</dependency>
 		<dependency>
 		    <groupId>com.force.api</groupId>
 		    <artifactId>force-metadata-api</artifactId>
-		    <version>35.0.0</version>
+		    <version>36.0.0</version>
 		</dependency>
 		<dependency>
 			<groupId>org.apache.commons</groupId>
 			<artifactId>commons-lang3</artifactId>
-			<version>3.3.2</version>
+			<version>3.4</version>
 		</dependency>
 		<dependency>
 		    <groupId>org.simpleframework</groupId>
 		    <artifactId>simple-xml</artifactId>
 		    <version>2.7.1</version>
 		</dependency>
-		
+		  <dependency>
+			<groupId>commons-io</groupId>
+			<artifactId>commons-io</artifactId>
+			<version>2.5</version>
+		</dependency>
 	</dependencies>
 	
 	<build>
+		<resources>
+			<resource>
+				<directory>src</directory>
+				<includes>
+					<include>antlib.xml</include>
+				</includes>
+			</resource>
+		</resources>
 		<sourceDirectory>src</sourceDirectory>
 		<plugins>
-
 			<plugin>
 				<artifactId>maven-compiler-plugin</artifactId>
 				<version>3.0</version>
@@ -62,8 +73,6 @@
 					<target>1.5</target>
 				</configuration>
 			</plugin>
-			
-			
 		    <plugin>
         		<artifactId>maven-assembly-plugin</artifactId>
         		<executions>
@@ -80,37 +89,6 @@
           			</descriptorRefs>
         		</configuration>
       		</plugin>
-			
 		</plugins>
-		
-		<!-- workaround for m2e errors --> 		
-		<pluginManagement>
-			<plugins>
-			    <plugin>
-			        <groupId>org.eclipse.m2e</groupId>
-			        <artifactId>lifecycle-mapping</artifactId>
-			        <version>1.0.0</version>
-			        <configuration>
-			            <lifecycleMappingMetadata>
-			                <pluginExecutions>
-			                    <pluginExecution>
-			                        <pluginExecutionFilter>
-			                            <groupId>org.apache.maven.plugins</groupId>
-			                            <artifactId>maven-dependency-plugin</artifactId>
-			                            <versionRange>[1.0.0,)</versionRange>
-			                            <goals>
-			                                <goal>copy-dependencies</goal>
-			                            </goals>
-			                        </pluginExecutionFilter>
-			                        <action>
-			                            <ignore />
-			                        </action>
-			                    </pluginExecution>
-			                </pluginExecutions>
-			            </lifecycleMappingMetadata>
-			        </configuration>
-			    </plugin>
-			</plugins>
-		</pluginManagement>
 	</build>
 </project>

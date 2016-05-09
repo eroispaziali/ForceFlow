@@ -5,6 +5,7 @@ import java.util.Collection;
 import java.util.HashMap;
 import java.util.Map;
 
+import org.apache.commons.io.FileUtils;
 import org.apache.tools.ant.BuildException;
 import org.simpleframework.xml.Serializer;
 import org.simpleframework.xml.core.Persister;
@@ -24,7 +25,17 @@ public class RunTestsTask extends SalesforceTask {
 	
 	private static final Integer TIME_CONVERSION_FACTOR = 1000;
 	private Map<String, TestSuite> testSuitesMap = new HashMap<String, TestSuite>();
+	private String testReportsDir;
 	
+
+	public String getTestReportsDir() {
+		return testReportsDir;
+	}
+
+	public void setTestReportsDir(String testReportsDir) {
+		this.testReportsDir = testReportsDir;
+	}
+
 	private TestSuite getOrCreate(String classname) {
 		TestSuite testSuite = testSuitesMap.get(classname);
 		if (testSuite==null) {
@@ -47,10 +58,11 @@ public class RunTestsTask extends SalesforceTask {
 			Collection<TestSuite> suites = buildTestReport(result);
 			Integer i = 1;
 			for (TestSuite testSuite : suites) {
-				String filename = String.format("test-report-%s.xml", i++);
+				String filename = String.format("%s/test-report-%s.xml", testReportsDir, i++);
 				try {
 					Serializer serializer = new Persister();
 					File source = new File(filename);
+					FileUtils.forceMkdirParent(source);
 					serializer.write(testSuite, source);
 				} catch (Exception e) {
 					log("Error: " + e);
