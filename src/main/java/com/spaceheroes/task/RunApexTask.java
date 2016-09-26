@@ -43,4 +43,8 @@ public class RunApexTask extends SalesforceTask {
 		addText(new Scanner(sourceFile, "UTF-8" ).useDelimiter("\\A").next());
 	}
 
+	public final String getApexCode() {
+		return apexCode;
+	}
+
 }
