@@ -16,14 +16,27 @@ import javax.xml.transform.stream.StreamResult;
 import org.w3c.dom.Document;
 import org.w3c.dom.Element;
 
-
+/**
+ * @name PackageXMLCreator
+ * @description: Utils funcions to create a package  
+ * @author jesus.cantero
+ */
 public class PackageXMLCreator {
-	
+	// Static string with the node name of packages
 	public static final String PACKAGE_NODE = "Package";
 	public static final String TYPES_NODE = "types";
 	public static final String MEMBERS_NODE = "members";
 	public static final String NAME_NODE = "name";
 	
+	/**
+	 * @name createPackageXML
+	 * @description: This functions create the package with the elements in the
+	 * param map.
+	 * @param Map<String, List<String>> pElementsByObjectType: map with the key as
+	 * the element types
+	 * @param  String pPathFile: Path of the file to be save
+	 * @author jesus.cantero
+	 */
 	public static void createPackageXML(Map<String, List<String>> pElementsByObjectType, String pPathFile) throws TransformerException, ParserConfigurationException{
 		DocumentBuilderFactory docFactory = DocumentBuilderFactory.newInstance();
 		DocumentBuilder docBuilder = docFactory.newDocumentBuilder();
