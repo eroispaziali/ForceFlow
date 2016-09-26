@@ -5,3 +5,7 @@ target/classes/*
 test-report*.xml
 /target/
 .DS_Store
+.classpath
+.settings/
+bin/*
+doc/*
