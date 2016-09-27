@@ -87,9 +87,8 @@ public class DestructiveFlowsPackage extends SalesforceTask {
 		System.out.println("matchesElements: " + matchesFlows);
 		List<String> matchesFlowDefinitions = this.getCommonElements(readFlowDefintionssRetrived(this.originRetrievePath), readFlowDefintionssRetrived(this.destinationRetrievePath));
 		try {
-			deactiveFlows(matchesFlowDefinitions, readElementsRetrivedFullPath(this.destinationRetrievePath + EXTRA_FOLDER, FLOW_DEFINITION), true);
+			deactiveFlows(matchesFlowDefinitions, readElementsRetrivedFullPath(this.destinationRetrievePath + EXTRA_FOLDER, FLOW_DEFINITION));
 			cleanDeactivationFolder(matchesFlowDefinitions, readElementsRetrivedFullPath(this.destinationRetrievePath + EXTRA_FOLDER, FLOW_DEFINITION));
-			//deactiveFlows(matchesFlowDefinitions, readElementsRetrivedFullPath(this.originRetrievePath, FLOW_DEFINITION), false);
 		} catch (ParserConfigurationException e) {
 			throw new BuildException(String.format(MESSAGE_WRONG_DEACTIVATION, e));
 		} catch (SAXException e){
@@ -207,7 +206,7 @@ public class DestructiveFlowsPackage extends SalesforceTask {
 		}
 	}
 	
-	protected void deactiveFlows(List<String> pFlowsToBeDeactivated, List<String> pFlowsDefFiles, boolean pToZero) throws ParserConfigurationException, SAXException, IOException, TransformerException{
+	protected void deactiveFlows(List<String> pFlowsToBeDeactivated, List<String> pFlowsDefFiles) throws ParserConfigurationException, SAXException, IOException, TransformerException{
 		System.out.println("pFlowsToBeDeactivated: " + pFlowsToBeDeactivated);
 		System.out.println("pFlowsDefFiles: " + pFlowsDefFiles);
 		for (String flowName : pFlowsToBeDeactivated){
@@ -229,13 +228,7 @@ public class DestructiveFlowsPackage extends SalesforceTask {
 								System.out.println("nodeElements.item(0): " + nodeElements.item(iCont2).getNodeName());
 								nodeElements.item(iCont2).setTextContent("0");
 								System.out.println("nodeElements.item(iCont2).getChildNodes().item(0): " + nodeElements.item(iCont2).getChildNodes().item(0).getNodeValue());
-								if (pToZero){
-									nodeElements.item(iCont2).getChildNodes().item(0).setNodeValue("0");
-								} else {
-									int newValue = Integer.valueOf(nodeElements.item(iCont2).getChildNodes().item(0).getNodeValue());
-									newValue = (newValue - 1 == 0 ? 1 : newValue -1);
-									nodeElements.item(iCont2).getChildNodes().item(0).setNodeValue(String.valueOf(newValue));
-								}
+								nodeElements.item(iCont2).getChildNodes().item(0).setNodeValue("0");
 							}
 						}
 					}
