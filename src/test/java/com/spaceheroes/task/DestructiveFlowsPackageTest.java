@@ -34,7 +34,7 @@ public class DestructiveFlowsPackageTest {
 	public static final String RESOURCES_FOLDER_RESULT = "result/destructive.xml";
 	public static final String CREATION_FOLDER_FORMAT_STRING = "%s/%s/%s";
 	
-	public static final int EXPECTED_MEMBERS_NODES = 2;
+	public static final int EXPECTED_MEMBERS_NODES = 1;
 	public static final List<String> EXPECTED_ELEMENTS_IN_XML = new ArrayList<String>(); 
 	
 	

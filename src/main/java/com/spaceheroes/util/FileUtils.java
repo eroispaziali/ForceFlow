@@ -34,11 +34,33 @@ public class FileUtils {
 	 * @author jesus.cantero
 	 */
 	public static List<String> listFilesForFolder(final File folder) {
+		System.out.println("folder.getAbsolutePath(): " + folder.getAbsolutePath());
 		List<String> fileNameToReturn = new ArrayList<String>();
 	    for (final File fileEntry : folder.listFiles()) {
 	        if (!fileEntry.isDirectory()) {
 	        	if(fileEntry.getName().indexOf(".") > 0){
+	        		
 	        		fileNameToReturn.add(fileEntry.getName());	
+	        	}
+	            
+	        }
+	    }
+		return fileNameToReturn;
+	}
+	/**
+	 * @name listFilesForFolder
+	 * @description: Get the list of files in the folder with the full path
+	 * @param  String folder: Folder to use
+	 * @return List<String>: list of files in the folder 
+	 * @author jesus.cantero
+	 */
+	public static List<String> listFilesForFolderFullPath(final File folder) {
+		List<String> fileNameToReturn = new ArrayList<String>();
+	    for (final File fileEntry : folder.listFiles()) {
+	        if (!fileEntry.isDirectory()) {
+	        	if(fileEntry.getName().indexOf(".") > 0){
+	        		System.out.println("fileEntry.getAbsolutePath(): " + fileEntry.getAbsolutePath());
+	        		fileNameToReturn.add(fileEntry.getAbsolutePath());	
 	        	}
 	            
 	        }
