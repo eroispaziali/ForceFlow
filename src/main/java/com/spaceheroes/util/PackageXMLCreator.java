@@ -65,6 +65,14 @@ public class PackageXMLCreator {
 		writePackageXML(doc, pPathFile);
 	}
 	
+	/**
+	 * @name writePackageXML
+	 * @description: Save the file in the path received as parameter.
+	 * @param Document pDoc: Document to be saved
+	 * @param String pPathFile: Path of the file
+	 * @return void
+	 * @author jesus.cantero
+	 */
 	public static void writePackageXML(Document pDoc, String pPathFile) throws TransformerException{
 		// write the content into xml file
 		TransformerFactory transformerFactory = TransformerFactory.newInstance();
@@ -78,18 +86,20 @@ public class PackageXMLCreator {
 		transformer.transform(source, result);
 		
 	}
+	
+	/**
+	 * @name readPackageXML
+	 * @description: Read a XML file
+	 * @param String pPath: Path of the file
+	 * @return void
+	 * @author jesus.cantero
+	 */
 	public static Document readPackageXML(String pPath) throws ParserConfigurationException, SAXException, IOException{
-		System.out.println("pPath: " + pPath);
 		File fXmlFile = new File(pPath);
 		DocumentBuilderFactory dbFactory = DocumentBuilderFactory.newInstance();
 		DocumentBuilder dBuilder = dbFactory.newDocumentBuilder();
 		Document doc = dBuilder.parse(fXmlFile);
-
-		//optional, but recommended
-		//read this - http://stackoverflow.com/questions/13786607/normalization-in-dom-parsing-with-java-how-does-it-work
 		doc.getDocumentElement().normalize();
-		System.out.println("doc1: " + doc.getTextContent());
-		System.out.println("Root element :" + doc.getDocumentElement().getNodeName());
 		return doc;
 	}
 }

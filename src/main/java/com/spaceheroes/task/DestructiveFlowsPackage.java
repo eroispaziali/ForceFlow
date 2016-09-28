@@ -84,7 +84,6 @@ public class DestructiveFlowsPackage extends SalesforceTask {
 	public void execute() throws BuildException {
 		
 		List<String> matchesFlows = this.getCommonElements(readFlowsRetrived(this.originRetrievePath), readFlowsRetrived(this.destinationRetrievePath));
-		System.out.println("matchesElements: " + matchesFlows);
 		List<String> matchesFlowDefinitions = this.getCommonElements(readFlowDefintionssRetrived(this.originRetrievePath), readFlowDefintionssRetrived(this.destinationRetrievePath));
 		try {
 			deactiveFlows(matchesFlowDefinitions, readElementsRetrivedFullPath(this.destinationRetrievePath + EXTRA_FOLDER, FLOW_DEFINITION));
@@ -94,15 +93,12 @@ public class DestructiveFlowsPackage extends SalesforceTask {
 		} catch (SAXException e){
 			throw new BuildException(String.format(MESSAGE_WRONG_DEACTIVATION, e));
 		} catch (IOException e){
-			throw new BuildException(e.getMessage(), e);
-			//throw new BuildException(String.format(MESSAGE_WRONG_DEACTIVATION, e));
+			throw new BuildException(String.format(MESSAGE_WRONG_DEACTIVATION, e));
 		} catch (TransformerException e) {
 			throw new BuildException(String.format(MESSAGE_WRONG_DEACTIVATION, e));
 		}
-		System.out.println("matchesElements: " + matchesFlowDefinitions);
 		Map<String, List<String>> matchesElements = new HashMap<String, List<String>>();
 		matchesElements.put(XML_NODE_FLOW, matchesFlows);
-		//matchesElements.put(XML_NODE_FLOW_DEFINITION, matchesFlowDefinitions);
 		this.createDestructivePackage(matchesElements);
 	}
 	
@@ -148,8 +144,9 @@ public class DestructiveFlowsPackage extends SalesforceTask {
 	}
 	
 	/**
-	 * @name readElementsRetrived
-	 * @description: Read the type elements in the folder both received as parameter
+	 * @name readElementsRetrivedFullPath
+	 * @description: Read the full paht type elements in the folder both received as 
+	 * parameter
 	 * @param String pPath: path that contains the flows files
 	 * @param String pObjectType: Object type to be read
 	 * @return List<String> list of elements type files in the folder.
@@ -206,40 +203,49 @@ public class DestructiveFlowsPackage extends SalesforceTask {
 		}
 	}
 	
-	protected void deactiveFlows(List<String> pFlowsToBeDeactivated, List<String> pFlowsDefFiles) throws ParserConfigurationException, SAXException, IOException, TransformerException{
-		System.out.println("pFlowsToBeDeactivated: " + pFlowsToBeDeactivated);
-		System.out.println("pFlowsDefFiles: " + pFlowsDefFiles);
-		for (String flowName : pFlowsToBeDeactivated){
+	/**
+	 * @name deactiveFlows
+	 * @description: Inactive all the flows that match between the origin and destination.
+	 * The function is updating the activeVersionNumber of the flow definition to zero.
+	 * @param List<String> pFlowsToBeDeactivated: Flows to be inactive
+	 * @param List<String> pFlowsDefFiles: List of full paths of the flow definition to be
+	 * updated
+	 * @return void
+	 * @author jesus.cantero
+	 */
+	protected void deactiveFlows(List<String> pFlowsToBeInactivated, List<String> pFlowsDefFiles) throws ParserConfigurationException, SAXException, IOException, TransformerException{
+		for (String flowName : pFlowsToBeInactivated){
 			for(String fileName : pFlowsDefFiles){
 				if (fileName.toLowerCase().contains(flowName)){
-					System.out.println("flowName: " + flowName);
 					Document doc = PackageXMLCreator.readPackageXML(fileName);
 					NodeList nList = doc.getElementsByTagName(XML_NODE_FLOW_DEFINITION);
-					System.out.println("nList: " + nList.getLength());
 					for (int iCont = 0; iCont < nList.getLength(); iCont++) {
 						Node node = nList.item(iCont);
-						System.out.println("node: " + node.getNodeType());
 						if (node.getNodeType() == Node.ELEMENT_NODE) {
 							Element element = (Element) node;
 							NodeList nodeElements = element.getElementsByTagName(XML_NODE_FLOW_DEFINITION_ACTIVE_VERSION);
 							for (int iCont2 = 0; iCont2 < nodeElements.getLength(); iCont2++){
-								//nodeElements.item(iCont2).setTextContent("0");
-								System.out.println("nodeElements.item(0): " + nodeElements.item(iCont2).getNodeValue());
-								System.out.println("nodeElements.item(0): " + nodeElements.item(iCont2).getNodeName());
 								nodeElements.item(iCont2).setTextContent("0");
-								System.out.println("nodeElements.item(iCont2).getChildNodes().item(0): " + nodeElements.item(iCont2).getChildNodes().item(0).getNodeValue());
 								nodeElements.item(iCont2).getChildNodes().item(0).setNodeValue("0");
 							}
 						}
 					}
-					System.out.println("doc2: " + doc.getTextContent());
-					System.out.println("pFilePath + fileName: " + fileName);
 					PackageXMLCreator.writePackageXML(doc, fileName);
 				}
 			}
 		}
 	}
 	
+	/**
+	 * @name cleanDeactivationFolder
+	 * @description: Delete the flow definitions that don't change and it's not needed to 
+	 * be deployed
+	 * @param List<String> pMatchesFD: Flows to be inactive
+	 * @param List<String> pFullPathFD: List of full paths of the flow definition to be
+	 * updated
+	 * @return void
+	 * @author jesus.cantero
+	 */
 	protected void cleanDeactivationFolder(List<String> pMatchesFD, List<String> pFullPathFD){
 		for(String path : pFullPathFD){
 			for (String match : pMatchesFD){

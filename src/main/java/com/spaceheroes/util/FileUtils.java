@@ -33,10 +33,10 @@ public class FileUtils {
 	 * @return List<String>: list of files in the folder 
 	 * @author jesus.cantero
 	 */
-	public static List<String> listFilesForFolder(final File folder) {
-		System.out.println("folder.getAbsolutePath(): " + folder.getAbsolutePath());
+	public static List<String> listFilesForFolder(final File pFolder) {
+		System.out.println("folder.getAbsolutePath(): " + pFolder.getAbsolutePath());
 		List<String> fileNameToReturn = new ArrayList<String>();
-	    for (final File fileEntry : folder.listFiles()) {
+	    for (final File fileEntry : pFolder.listFiles()) {
 	        if (!fileEntry.isDirectory()) {
 	        	if(fileEntry.getName().indexOf(".") > 0){
 	        		
@@ -50,13 +50,13 @@ public class FileUtils {
 	/**
 	 * @name listFilesForFolder
 	 * @description: Get the list of files in the folder with the full path
-	 * @param  String folder: Folder to use
+	 * @param  String pFolder: Folder to use
 	 * @return List<String>: list of files in the folder 
 	 * @author jesus.cantero
 	 */
-	public static List<String> listFilesForFolderFullPath(final File folder) {
+	public static List<String> listFilesForFolderFullPath(final File pFolder) {
 		List<String> fileNameToReturn = new ArrayList<String>();
-	    for (final File fileEntry : folder.listFiles()) {
+	    for (final File fileEntry : pFolder.listFiles()) {
 	        if (!fileEntry.isDirectory()) {
 	        	if(fileEntry.getName().indexOf(".") > 0){
 	        		System.out.println("fileEntry.getAbsolutePath(): " + fileEntry.getAbsolutePath());
