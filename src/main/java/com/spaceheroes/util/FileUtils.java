@@ -34,7 +34,6 @@ public class FileUtils {
 	 * @author jesus.cantero
 	 */
 	public static List<String> listFilesForFolder(final File pFolder) {
-		System.out.println("folder.getAbsolutePath(): " + pFolder.getAbsolutePath());
 		List<String> fileNameToReturn = new ArrayList<String>();
 	    for (final File fileEntry : pFolder.listFiles()) {
 	        if (!fileEntry.isDirectory()) {
@@ -59,7 +58,6 @@ public class FileUtils {
 	    for (final File fileEntry : pFolder.listFiles()) {
 	        if (!fileEntry.isDirectory()) {
 	        	if(fileEntry.getName().indexOf(".") > 0){
-	        		System.out.println("fileEntry.getAbsolutePath(): " + fileEntry.getAbsolutePath());
 	        		fileNameToReturn.add(fileEntry.getAbsolutePath());	
 	        	}
 	            
@@ -78,7 +76,6 @@ public class FileUtils {
 	public static String getFileNameWithoutExtension(String pFileName){
 		String normalizedName = pFileName;
 		if (normalizedName.indexOf(".") > 0){
-			//System.out.println("normalizedName3: " + normalizedName);
 			normalizedName = normalizedName.split("\\.", -1)[0];
 		}
 		return normalizedName;
@@ -93,13 +90,10 @@ public class FileUtils {
 	 */
 	public static String getNormalizedFileName(String pFileName){
 		String normalizedName = pFileName.toLowerCase();
-		//System.out.println("normalizedName1: " + normalizedName);
 		if (normalizedName.indexOf("-") > -1){
-			//System.out.println("normalizedName2: " + normalizedName);
 			normalizedName = normalizedName.split("-")[0];
 		}
 		normalizedName = getFileNameWithoutExtension(normalizedName);
-		//System.out.println("normalizedName4: " + normalizedName);
 		return normalizedName;
 	}
 
