@@ -4,3 +4,8 @@ target/classes/*
 *.class
 test-report*.xml
 /target/
+.DS_Store
+.classpath
+.settings/
+bin/*
+doc/*
