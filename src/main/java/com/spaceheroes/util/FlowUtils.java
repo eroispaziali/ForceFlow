@@ -2,6 +2,7 @@ package com.spaceheroes.util;
 
 import java.io.File;
 import java.io.IOException;
+import java.util.ArrayList;
 import java.util.List;
 
 import org.apache.commons.io.FileUtils;
@@ -20,6 +21,11 @@ public class FlowUtils {
 		for (String flowName : flowNames) {
 			createInactiveDefinition(root, flowName);
 		}
+	}
+	
+	public static void createFlowDownloadAllPack(String path) throws IOException {
+		File root = new File(path);
+		createFlowManifest(root);
 	}
 	
 	public static void createFlowDeletionPack(String path, List<String> flowNames) throws IOException {
@@ -45,6 +51,12 @@ public class FlowUtils {
 			e.printStackTrace();
 			throw new IOException("Unable to create package manifest");
 		}
+	}
+	
+	private static File createFlowManifest(File root) throws IOException {
+		List<String> names = new ArrayList<String>();
+		names.add("*");
+		return createFlowManifest(root, names);
 	}
 	
 	private static File createFlowManifest(File root, List<String> flowNames) throws IOException {
