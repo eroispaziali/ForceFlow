@@ -12,13 +12,26 @@ public class TestRun {
 	@Test
 	public void testPackage() throws Exception {
 		
+		/* stage 1 */
 		FlowUtils.createFlowDownloadAllPack("1-flows-download");
+		// download flows with migration tool
 		
-		// download flows with metadata API
+		/* stage 2 */
+		String downloadPath = "data/src/flows";
+		String tempPath = "2-flows-deactivate";
+
+		List<String> flowNames = FlowUtils.getFlowsNames(downloadPath);
+		FlowUtils.copyFlowsAndIncreaseVersion(downloadPath, tempPath + "/flows");
+		FlowUtils.createFlowInactivationPack(tempPath, flowNames);
 		
-		List<String> flowNames = FlowUtils.getFlowsNames("data/src/flows");
+		/* stage 3 */
 		
-		FlowUtils.createFlowInactivationPack("2-flows-deactivate", flowNames);
+		
+		
+		// deploy deactivations with migration tool
+		
+		
+		
 		FlowUtils.createFlowDeletionPack("3-flow-deletions", flowNames);
 		
 		FlowUtils.copyFlowsAndIncreaseVersion("data/src/flows", "data/src/flows-copy");

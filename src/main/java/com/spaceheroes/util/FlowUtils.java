@@ -92,9 +92,9 @@ public class FlowUtils {
 	private static File createFlowDefinitionManifest(File root, List<String> flowNames) throws IOException {
 		String filename = root.getPath() + "/" + "package.xml";
 		Manifest manifest = new Manifest();
-		ManifestType manifestType = new ManifestType("FlowDefinition");
-		manifestType.addMembers(flowNames);
-		manifest.addType(manifestType);
+		ManifestType flowDefinitions = new ManifestType("FlowDefinition");
+		flowDefinitions.addMembers(flowNames);
+		manifest.addType(flowDefinitions);
 		return serializeXml(filename, manifest);
 	}
 	
