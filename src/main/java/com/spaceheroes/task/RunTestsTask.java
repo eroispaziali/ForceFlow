@@ -16,10 +16,10 @@ import com.sforce.soap.apex.RunTestsRequest;
 import com.sforce.soap.apex.RunTestsResult;
 import com.sforce.soap.apex.SoapConnection;
 import com.sforce.ws.ConnectionException;
-import com.spaceheroes.junit.TestCase;
-import com.spaceheroes.junit.TestFailure;
-import com.spaceheroes.junit.TestSuite;
 import com.spaceheroes.util.ConnectionFactory;
+import com.spaceheroes.xml.junit.TestCase;
+import com.spaceheroes.xml.junit.TestFailure;
+import com.spaceheroes.xml.junit.TestSuite;
 
 public class RunTestsTask extends SalesforceTask {
 	
