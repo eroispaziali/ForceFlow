@@ -34,23 +34,14 @@ public class FlowUtils {
 	}
 	
 	private static File createFlowDefinitionManifest(File root, List<String> flowNames) throws IOException {
-		Serializer serializer = new Persister();
 		String filename = root.getPath() + "/" + "package.xml";
-		File source = new File(filename);
-		FileUtils.forceMkdirParent(source);
 		Manifest m = new Manifest();
 		ManifestType mt = new ManifestType("FlowDefinition");
 		for (String name : flowNames) {
 			mt.addMember(name);
 		}
 		m.addType(mt);
-		try {
-			serializer.write(m, source);
-			return source;
-		} catch (Exception e) {
-			e.printStackTrace();
-			throw new IOException("Unable to create package manifest");
-		}
+		return serializeXml(filename, m);
 	}
 	
 	private static File createFlowManifest(File root) throws IOException {
@@ -60,38 +51,34 @@ public class FlowUtils {
 	}
 	
 	private static File createFlowManifest(File root, List<String> flowNames) throws IOException {
-		Serializer serializer = new Persister();
 		String filename = root.getPath() + "/" + "package.xml";
-		File source = new File(filename);
-		FileUtils.forceMkdirParent(source);
 		Manifest m = new Manifest();
 		ManifestType mt = new ManifestType("Flow");
 		for (String name : flowNames) {
 			mt.addMember(name);
 		}
 		m.addType(mt);
-		try {
-			serializer.write(m, source);
-			return source;
-		} catch (Exception e) {
-			e.printStackTrace();
-			throw new IOException("Unable to create package manifest");
-		}
+		return serializeXml(filename, m);
 	}
 	
 	public static File createInactiveDefinition(File root, String flowName) throws IOException {
 		String filename =  root.getPath() + "/flowDefinitions/" +  flowName + ".flowDefinition";
-		Serializer serializer = new Persister();
-		File source = new File(filename);
-		FileUtils.forceMkdirParent(source);
 		FlowDefinition fd = new FlowDefinition();
+		return serializeXml(filename, fd);
+	}
+	
+	private static File serializeXml(String filename, Object object) throws IOException {
+		Serializer serializer = new Persister();
+		File output = new File(filename);
+		FileUtils.forceMkdirParent(output);
 		try {
-			serializer.write(fd, source);
-			return source;
+			serializer.write(object, output);
+			return output;
 		} catch (Exception e) {
 			e.printStackTrace();
-			throw new IOException("Unable to create flow definition");
+			throw new IOException("Unable to serialize");
 		}
+		
 	}
 
 }
