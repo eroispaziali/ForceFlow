@@ -31,10 +31,7 @@ public class TestRun {
 		/* stage 4 */
 		
 		// create deletion pack: 
-		// TODO: should have version in names
-		// TODO: file should be named destructiveChanges.xml
-		FlowUtils.createFlowDeletionPack("3-flow-deletions", flowNames);
-		
+		FlowUtils.createFlowDeletionPack(downloadPath, "3-flow-deletions");
 		/* stage 4 */
 		// deploy with migration tool
 		

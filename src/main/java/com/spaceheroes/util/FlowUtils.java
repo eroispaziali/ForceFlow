@@ -61,6 +61,22 @@ public class FlowUtils {
 		return flowNames;
 	}
 	
+	public static void createFlowDeletionPack(String flowPath, String outputPath) throws IOException {
+		File dir = new File(flowPath);
+		File[] directoryFiles = dir.listFiles();
+		List<String> flowNames = new ArrayList<String>();
+		if (directoryFiles != null) {
+			for (File srcFile : directoryFiles) {
+				String srcFilename = srcFile.getName();
+				if (srcFilename.matches(".+(-([0-9]+))?.flow")) {
+					String flowNameWithVersion = StringUtils.substringBeforeLast(srcFilename, ".");
+					flowNames.add(flowNameWithVersion);
+				}
+			}
+			createFlowDeletionPack(outputPath + "/destructiveChanges.xml", flowNames);
+		}
+	}
+	
 	public static void createFlowInactivationPack(String flowPath, String outputPath) throws IOException {
 		List<String> flowNames = getFlowsNames(flowPath);
 		File outputRoot = new File(outputPath);
@@ -104,7 +120,7 @@ public class FlowUtils {
 	}
 	
 	private static File createFlowManifest(File root, List<String> flowNames) throws IOException {
-		String filename = root.getPath() + "/" + "package.xml";
+		String filename = root.isDirectory() ? root.getPath() + "/" + "package.xml" : root.getPath();
 		Manifest manifest = new Manifest();
 		ManifestType manifestType = new ManifestType("Flow");
 		manifestType.addMembers(flowNames);
