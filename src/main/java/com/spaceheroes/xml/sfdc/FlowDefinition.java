@@ -12,6 +12,21 @@ public class FlowDefinition {
 	
 	@Element
 	private String activeVersionNumber = "0";
-	
+
+	public String getXmlns() {
+		return xmlns;
+	}
+
+	public void setXmlns(String xmlns) {
+		this.xmlns = xmlns;
+	}
+
+	public String getActiveVersionNumber() {
+		return activeVersionNumber;
+	}
+
+	public void setActiveVersionNumber(String activeVersionNumber) {
+		this.activeVersionNumber = activeVersionNumber;
+	}
 
 }

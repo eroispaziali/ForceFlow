@@ -43,5 +43,13 @@ public class Manifest {
 	public void addType(ManifestType type) {
 		this.types.add(type);
 	}
+
+	public String getXmlns() {
+		return xmlns;
+	}
+
+	public void setXmlns(String xmlns) {
+		this.xmlns = xmlns;
+	}
 	
 }
