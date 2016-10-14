@@ -14,16 +14,23 @@ import com.spaceheroes.xml.sfdc.ManifestType;
 
 public class FlowUtils {
 	
-	public static void createFlowInactivationPack(List<String> flowNames) throws IOException {
-		createFlowDefinitionManifest(flowNames);
+	public static void createFlowInactivationPack(String path, List<String> flowNames) throws IOException {
+		File root = new File(path);
+		createFlowDefinitionManifest(root, flowNames);
 		for (String flowName : flowNames) {
-			createInactiveDefinition(flowName);
+			createInactiveDefinition(root, flowName);
 		}
 	}
 	
-	public static File createFlowDefinitionManifest(List<String> flowNames) throws IOException {
+	public static void createFlowDeletionPack(String path, List<String> flowNames) throws IOException {
+		File root = new File(path);
+		createFlowManifest(root, flowNames);
+	}
+	
+	private static File createFlowDefinitionManifest(File root, List<String> flowNames) throws IOException {
 		Serializer serializer = new Persister();
-		File source = new File("package.xml");
+		String filename = root.getPath() + "/" + "package.xml";
+		File source = new File(filename);
 		FileUtils.forceMkdirParent(source);
 		Manifest m = new Manifest();
 		ManifestType mt = new ManifestType("FlowDefinition");
@@ -40,9 +47,10 @@ public class FlowUtils {
 		}
 	}
 	
-	public static File createFlowManifest(String filename, List<String> flowNames) throws IOException {
+	private static File createFlowManifest(File root, List<String> flowNames) throws IOException {
 		Serializer serializer = new Persister();
-		File source = new File("package.xml");
+		String filename = root.getPath() + "/" + "package.xml";
+		File source = new File(filename);
 		FileUtils.forceMkdirParent(source);
 		Manifest m = new Manifest();
 		ManifestType mt = new ManifestType("Flow");
@@ -59,8 +67,8 @@ public class FlowUtils {
 		}
 	}
 	
-	public static File createInactiveDefinition(String flowName) throws IOException {
-		String filename = "flowDefinitions/" +  flowName + ".flowDefinition";
+	public static File createInactiveDefinition(File root, String flowName) throws IOException {
+		String filename =  root.getPath() + "/flowDefinitions/" +  flowName + ".flowDefinition";
 		Serializer serializer = new Persister();
 		File source = new File(filename);
 		FileUtils.forceMkdirParent(source);

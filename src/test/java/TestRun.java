@@ -18,7 +18,9 @@ public class TestRun {
 		flowNames.add("Update_Lead_when_Campaign_Member_Sales_Owner_is_Updated");
 		//FlowUtils.createFlowManifest("package.xml", flowNames);
 		//FlowUtils.createInactiveDefinition("Update_Lead_when_Campaign_Member_Sales_Owner_is_Updated");
-		FlowUtils.createFlowInactivationPack(flowNames);
+		
+		FlowUtils.createFlowInactivationPack("flow-inactivations", flowNames);
+		FlowUtils.createFlowDeletionPack("flow-deletions", flowNames);
 		
 	}
 	
