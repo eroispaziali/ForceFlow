@@ -14,7 +14,7 @@ public class TestRun {
 		
 		/* stage 1 */
 		FlowUtils.createFlowDownloadAllPack("1-flows-download");
-		// download flows with migration tool
+		// TODO: download flows with migration tool
 		
 		/* stage 2 */
 		String downloadPath = "data/src/flows";
@@ -25,16 +25,18 @@ public class TestRun {
 		FlowUtils.createFlowInactivationPack(tempPath, flowNames);
 		
 		/* stage 3 */
+		// TODO: deploy deactivations with migration tool
 		
 		
+		/* stage 4 */
 		
-		// deploy deactivations with migration tool
-		
-		
-		
+		// create deletion pack: 
+		// TODO: should have version in names
+		// TODO: file should be named destructiveChanges.xml
 		FlowUtils.createFlowDeletionPack("3-flow-deletions", flowNames);
 		
-		FlowUtils.copyFlowsAndIncreaseVersion("data/src/flows", "data/src/flows-copy");
+		/* stage 4 */
+		// deploy with migration tool
 		
 	}
 	

@@ -35,7 +35,6 @@ public class FlowUtils {
 						File destFile = new File(destPath + "/" + destFilename);
 						FileUtils.forceMkdirParent(destFile);
 						FileUtils.copyFile(srcFile, destFile);
-						System.out.println(destFile.getAbsolutePath().toString());
 					} catch (IOException e) {
 						// ignore
 						e.printStackTrace();
