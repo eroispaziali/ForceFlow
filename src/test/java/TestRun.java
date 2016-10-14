@@ -21,6 +21,8 @@ public class TestRun {
 		FlowUtils.createFlowDeletionPack("flow-deletions", flowNames);
 		FlowUtils.createFlowDownloadAllPack("existing-flows");
 		
+		FlowUtils.copyFlowsAndIncreaseVersion("data/src/flows", "data/src/flows-copy");
+		
 	}
 	
 

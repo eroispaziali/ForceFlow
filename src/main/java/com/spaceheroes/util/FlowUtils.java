@@ -6,6 +6,7 @@ import java.util.ArrayList;
 import java.util.List;
 
 import org.apache.commons.io.FileUtils;
+import org.apache.commons.lang3.StringUtils;
 import org.simpleframework.xml.Serializer;
 import org.simpleframework.xml.core.Persister;
 
@@ -14,6 +15,35 @@ import com.spaceheroes.xml.sfdc.Manifest;
 import com.spaceheroes.xml.sfdc.ManifestType;
 
 public class FlowUtils {
+	
+	public static void copyFlowsAndIncreaseVersion(String srcPath, String destPath) {
+		File dir = new File(srcPath);
+		File[] directoryFiles = dir.listFiles();
+		if (directoryFiles != null) {
+			for (File srcFile : directoryFiles) {
+				String srcFilename = srcFile.getName();
+				if (srcFilename.matches(".+(-([0-9]+))?.flow")) {
+					String srcFileNameNoExt = StringUtils.substringBeforeLast(srcFilename, ".");
+					String flowName = StringUtils.substringBeforeLast(srcFileNameNoExt, "-");
+					String flowNumber = StringUtils.substringAfterLast(srcFileNameNoExt, "-");
+					Integer flowVersion = StringUtils.isNumeric(flowNumber) ? Integer.valueOf(flowNumber) : 1;
+					String destFilename = 
+							(flowVersion>0) 
+							? String.format("%s-%d.flow", flowName, flowVersion+1) 
+							: String.format("%s.flow", flowName) ;
+					try {
+						File destFile = new File(destPath + "/" + destFilename);
+						FileUtils.forceMkdirParent(destFile);
+						FileUtils.copyFile(srcFile, destFile);
+						System.out.println(destFile.getAbsolutePath().toString());
+					} catch (IOException e) {
+						// ignore
+						e.printStackTrace();
+					}
+				}
+			}
+		}
+	}
 	
 	public static void createFlowInactivationPack(String path, List<String> flowNames) throws IOException {
 		File root = new File(path);
@@ -35,13 +65,13 @@ public class FlowUtils {
 	
 	private static File createFlowDefinitionManifest(File root, List<String> flowNames) throws IOException {
 		String filename = root.getPath() + "/" + "package.xml";
-		Manifest m = new Manifest();
-		ManifestType mt = new ManifestType("FlowDefinition");
-		for (String name : flowNames) {
-			mt.addMember(name);
+		Manifest manifest = new Manifest();
+		ManifestType manifestType = new ManifestType("FlowDefinition");
+		for (String flowName : flowNames) {
+			manifestType.addMember(flowName);
 		}
-		m.addType(mt);
-		return serializeXml(filename, m);
+		manifest.addType(manifestType);
+		return serializeXml(filename, manifest);
 	}
 	
 	private static File createFlowManifest(File root) throws IOException {
