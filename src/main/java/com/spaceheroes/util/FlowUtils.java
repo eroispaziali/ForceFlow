@@ -45,6 +45,32 @@ public class FlowUtils {
 		}
 	}
 	
+	public static List<String> getFlowsNames(String srcPath) {
+		File dir = new File(srcPath);
+		File[] directoryFiles = dir.listFiles();
+		List<String> flowNames = new ArrayList<String>();
+		if (directoryFiles != null) {
+			for (File srcFile : directoryFiles) {
+				String srcFilename = srcFile.getName();
+				if (srcFilename.matches(".+(-([0-9]+))?.flow")) {
+					String srcFileNameNoExt = StringUtils.substringBeforeLast(srcFilename, ".");
+					String flowName = StringUtils.substringBeforeLast(srcFileNameNoExt, "-");
+					flowNames.add(flowName);
+				}
+			}
+		}
+		return flowNames;
+	}
+	
+	public static void createFlowInactivationPack(String flowPath, String outputPath) throws IOException {
+		List<String> flowNames = getFlowsNames(flowPath);
+		File outputRoot = new File(outputPath);
+		createFlowDefinitionManifest(outputRoot, flowNames);
+		for (String flowName : flowNames) {
+			createInactiveDefinition(outputRoot, flowName);
+		}
+	}
+	
 	public static void createFlowInactivationPack(String path, List<String> flowNames) throws IOException {
 		File root = new File(path);
 		createFlowDefinitionManifest(root, flowNames);
@@ -67,9 +93,7 @@ public class FlowUtils {
 		String filename = root.getPath() + "/" + "package.xml";
 		Manifest manifest = new Manifest();
 		ManifestType manifestType = new ManifestType("FlowDefinition");
-		for (String flowName : flowNames) {
-			manifestType.addMember(flowName);
-		}
+		manifestType.addMembers(flowNames);
 		manifest.addType(manifestType);
 		return serializeXml(filename, manifest);
 	}
@@ -82,13 +106,11 @@ public class FlowUtils {
 	
 	private static File createFlowManifest(File root, List<String> flowNames) throws IOException {
 		String filename = root.getPath() + "/" + "package.xml";
-		Manifest m = new Manifest();
-		ManifestType mt = new ManifestType("Flow");
-		for (String name : flowNames) {
-			mt.addMember(name);
-		}
-		m.addType(mt);
-		return serializeXml(filename, m);
+		Manifest manifest = new Manifest();
+		ManifestType manifestType = new ManifestType("Flow");
+		manifestType.addMembers(flowNames);
+		manifest.addType(manifestType);
+		return serializeXml(filename, manifest);
 	}
 	
 	public static File createInactiveDefinition(File root, String flowName) throws IOException {
@@ -108,7 +130,6 @@ public class FlowUtils {
 			e.printStackTrace();
 			throw new IOException("Unable to serialize");
 		}
-		
 	}
 
 }

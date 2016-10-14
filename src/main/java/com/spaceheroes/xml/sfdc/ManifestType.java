@@ -45,5 +45,13 @@ public class ManifestType {
 		this.members.add(member);
 	}
 	
+	public void addMembers(List<String> members) {
+		if (members!=null && !members.isEmpty()) {
+			for (String member: members) {
+				addMember(member);
+			}
+		}
+	}
+	
 
 }

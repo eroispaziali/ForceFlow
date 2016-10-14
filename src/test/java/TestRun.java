@@ -1,6 +1,5 @@
 
 
-import java.util.ArrayList;
 import java.util.List;
 
 import org.junit.Test;
@@ -13,13 +12,14 @@ public class TestRun {
 	@Test
 	public void testPackage() throws Exception {
 		
-		List<String> flowNames = new ArrayList<String>();
-		flowNames.add("Update_Contact_when_Campaign_Member_Sales_Owner_is_Updated");
-		flowNames.add("Update_Lead_when_Campaign_Member_Sales_Owner_is_Updated");
+		FlowUtils.createFlowDownloadAllPack("1-flows-download");
 		
-		FlowUtils.createFlowInactivationPack("flow-inactivations", flowNames);
-		FlowUtils.createFlowDeletionPack("flow-deletions", flowNames);
-		FlowUtils.createFlowDownloadAllPack("existing-flows");
+		// download flows with metadata API
+		
+		List<String> flowNames = FlowUtils.getFlowsNames("data/src/flows");
+		
+		FlowUtils.createFlowInactivationPack("2-flows-deactivate", flowNames);
+		FlowUtils.createFlowDeletionPack("3-flow-deletions", flowNames);
 		
 		FlowUtils.copyFlowsAndIncreaseVersion("data/src/flows", "data/src/flows-copy");
 		
