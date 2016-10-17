@@ -11,7 +11,7 @@ import org.simpleframework.xml.Root;
 @Root(name="Package")
 public class Manifest {
 	
-	@Attribute
+	@Attribute(required=false)
 	private String xmlns="http://soap.sforce.com/2006/04/metadata";
 	
 	@ElementList(inline=true, name="types", required=false)

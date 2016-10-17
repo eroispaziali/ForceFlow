@@ -6,33 +6,28 @@ import java.util.ArrayList;
 import java.util.List;
 
 import org.apache.commons.io.FileUtils;
-import org.apache.commons.lang3.StringUtils;
 import org.simpleframework.xml.Serializer;
 import org.simpleframework.xml.core.Persister;
 
+import com.spaceheroes.model.FlowFile;
 import com.spaceheroes.xml.sfdc.FlowDefinition;
 import com.spaceheroes.xml.sfdc.Manifest;
 import com.spaceheroes.xml.sfdc.ManifestType;
 
 public class FlowUtils {
 	
-	public static void copyFlowsAndIncreaseVersion(String srcPath, String destPath) {
+	private static void copyFlowsAndIncreaseVersion(Manifest manifest, String srcPath, String destPath) {
 		File dir = new File(srcPath);
 		File[] directoryFiles = dir.listFiles();
+		ManifestType manifestType = new ManifestType("Flows");
 		if (directoryFiles != null) {
 			for (File srcFile : directoryFiles) {
 				String srcFilename = srcFile.getName();
 				if (srcFilename.matches(".+(-([0-9]+))?.flow")) {
-					String srcFileNameNoExt = StringUtils.substringBeforeLast(srcFilename, ".");
-					String flowName = StringUtils.substringBeforeLast(srcFileNameNoExt, "-");
-					String flowNumber = StringUtils.substringAfterLast(srcFileNameNoExt, "-");
-					Integer flowVersion = StringUtils.isNumeric(flowNumber) ? Integer.valueOf(flowNumber) : 1;
-					String destFilename = 
-							(flowVersion>0) 
-							? String.format("%s-%d.flow", flowName, flowVersion+1) 
-							: String.format("%s.flow", flowName) ;
+					FlowFile ff = new FlowFile(srcFile);
+					manifestType.addMember(ff.getFilenameNextVersion());
 					try {
-						File destFile = new File(destPath + "/" + destFilename);
+						File destFile = new File(destPath + "/" + ff.getFilenameNextVersion());
 						FileUtils.forceMkdirParent(destFile);
 						FileUtils.copyFile(srcFile, destFile);
 					} catch (IOException e) {
@@ -41,102 +36,126 @@ public class FlowUtils {
 					}
 				}
 			}
+			manifest.addType(manifestType);
 		}
 	}
 	
-	public static List<String> getFlowsNames(String srcPath) {
+	public static List<FlowFile> getFlowFiles(String srcPath) {
 		File dir = new File(srcPath);
 		File[] directoryFiles = dir.listFiles();
-		List<String> flowNames = new ArrayList<String>();
+		List<FlowFile> flowFiles = new ArrayList<FlowFile>();
 		if (directoryFiles != null) {
 			for (File srcFile : directoryFiles) {
 				String srcFilename = srcFile.getName();
 				if (srcFilename.matches(".+(-([0-9]+))?.flow")) {
-					String srcFileNameNoExt = StringUtils.substringBeforeLast(srcFilename, ".");
-					String flowName = StringUtils.substringBeforeLast(srcFileNameNoExt, "-");
-					flowNames.add(flowName);
+					flowFiles.add(new FlowFile(srcFile));
 				}
 			}
 		}
-		return flowNames;
+		return flowFiles;
 	}
 	
-	public static void createFlowDeletionPack(String flowPath, String outputPath) throws IOException {
-		File dir = new File(flowPath);
-		File[] directoryFiles = dir.listFiles();
-		List<String> flowNames = new ArrayList<String>();
-		if (directoryFiles != null) {
-			for (File srcFile : directoryFiles) {
-				String srcFilename = srcFile.getName();
-				if (srcFilename.matches(".+(-([0-9]+))?.flow")) {
-					String flowNameWithVersion = StringUtils.substringBeforeLast(srcFilename, ".");
-					flowNames.add(flowNameWithVersion);
-				}
-			}
-			createFlowDeletionPack(outputPath + "/destructiveChanges.xml", flowNames);
-		}
+	public static void createFlowDeletionPack(String sourcePath, String outputPath) throws IOException {
+		//String tempPath = "ff-output/3-flows-delete";
+		List<FlowFile> nextVersionFlows = FlowUtils.getFlowFiles(sourcePath + "/flows");
+		FlowUtils.createFlowDeletionPack(outputPath, nextVersionFlows);
 	}
+//	public static void createFlowDeletionPack(String flowPath, String outputPath) throws IOException {
+//		List<FlowFile> flowFiles = getFlowFiles(flowPath);
+//		createFlowDeletionPack(outputPath + "/destructiveChanges.xml", flowFiles);
+//	}
 	
-	public static void createFlowInactivationPack(String flowPath, String outputPath) throws IOException {
-		List<String> flowNames = getFlowsNames(flowPath);
+	public static void createFlowInactivationPack(Manifest manifest, String flowPath, String outputPath) throws IOException {
+		List<FlowFile> flowFiles = getFlowFiles(flowPath);
 		File outputRoot = new File(outputPath);
-		createFlowDefinitionManifest(outputRoot, flowNames);
-		for (String flowName : flowNames) {
+		createFlowDefinitionManifest(manifest, flowFiles);
+		for (FlowFile flowName : flowFiles) {
 			createInactiveDefinition(outputRoot, flowName);
 		}
 	}
 	
-	public static void createFlowInactivationPack(String path, List<String> flowNames) throws IOException {
+	private static void createFlowInactivationPack(Manifest manifest, String path, List<FlowFile> flowFiles) throws IOException {
 		File root = new File(path);
-		createFlowDefinitionManifest(root, flowNames);
-		for (String flowName : flowNames) {
+		createFlowDefinitionManifest(manifest , flowFiles);
+		for (FlowFile flowName : flowFiles) {
 			createInactiveDefinition(root, flowName);
 		}
 	}
 	
+	// public
 	public static void createFlowDownloadAllPack(String path) throws IOException {
 		File root = new File(path);
-		createFlowManifest(root);
+		createFlowManifest(root, "package.xml");
 	}
 	
-	public static void createFlowDeletionPack(String path, List<String> flowNames) throws IOException {
+	public static void createFlowInactivation(String sourcePath, String outputPath) throws IOException {
+		//String downloadPath = "data/src/flows";
+		//String tempPath = "ff-output/2-flows-deactivate";
+		String flowsDestinationPath = outputPath + "/flows";
+		
+
+		List<FlowFile> flowFiles = FlowUtils.getFlowFiles(sourcePath);
+		String manifestFilePath = outputPath + "/package.xml";
+		File manifestFile = new File(manifestFilePath);
+		Manifest manifest = FlowUtils.readOrCreateManifest(manifestFile);
+		copyFlowsAndIncreaseVersion(manifest, sourcePath, flowsDestinationPath);
+		createFlowInactivationPack(manifest, outputPath, flowFiles);
+		
+		serializeXml(manifestFile, manifest);
+	}
+	
+	public static void createFlowDeletionPack(String path, List<FlowFile> flowFiles) throws IOException {
 		File root = new File(path);
-		createFlowManifest(root, flowNames);
-	}
-	
-	private static File createFlowDefinitionManifest(File root, List<String> flowNames) throws IOException {
-		String filename = root.getPath() + "/" + "package.xml";
-		Manifest manifest = new Manifest();
-		ManifestType flowDefinitions = new ManifestType("FlowDefinition");
-		flowDefinitions.addMembers(flowNames);
-		manifest.addType(flowDefinitions);
-		return serializeXml(filename, manifest);
-	}
-	
-	private static File createFlowManifest(File root) throws IOException {
-		List<String> names = new ArrayList<String>();
-		names.add("*");
-		return createFlowManifest(root, names);
-	}
-	
-	private static File createFlowManifest(File root, List<String> flowNames) throws IOException {
-		String filename = root.isDirectory() ? root.getPath() + "/" + "package.xml" : root.getPath();
-		Manifest manifest = new Manifest();
+		String filePath = root.getPath() + "/" + "destructiveChanges.xml";
+		File manifestFile = new File(filePath);
+		Manifest manifest = readOrCreateManifest(manifestFile);
 		ManifestType manifestType = new ManifestType("Flow");
-		manifestType.addMembers(flowNames);
+		if (flowFiles!=null && flowFiles.size()>0) {
+			for (FlowFile ff : flowFiles) {
+				manifestType.addMember(ff.getFilenameCurrentVersion());	
+			}
+		} 
 		manifest.addType(manifestType);
-		return serializeXml(filename, manifest);
+		serializeXml(manifestFile, manifest);
 	}
 	
-	public static File createInactiveDefinition(File root, String flowName) throws IOException {
-		String filename =  root.getPath() + "/flowDefinitions/" +  flowName + ".flowDefinition";
+	private static void createFlowDefinitionManifest(Manifest manifest, List<FlowFile> flowFiles) throws IOException {
+		ManifestType flowDefinitions = new ManifestType("FlowDefinition");
+		for (FlowFile ff : flowFiles) {
+			flowDefinitions.addMember(ff.getName());	
+		}
+		manifest.addType(flowDefinitions);
+	}
+	
+	public static File createFlowManifest(File root, String filename) throws IOException {
+		return createFlowManifest(root, filename, null);
+	}
+	
+	public static File createFlowManifest(File root, String filename, List<FlowFile> flowFiles) throws IOException {
+		String filePath = root.getPath() + "/" + filename;
+		File file = new File(filePath);
+		Manifest manifest = readOrCreateManifest(file);
+		ManifestType manifestType = new ManifestType("Flow");
+		if (flowFiles!=null && flowFiles.size()>0) {
+			for (FlowFile ff : flowFiles) {
+				manifestType.addMember(ff.getName());	
+			}
+		} else {
+			manifestType.addMember("*");
+		}
+		manifest.addType(manifestType);
+		return serializeXml(file, manifest);
+	}
+	
+	public static File createInactiveDefinition(File root, FlowFile ff) throws IOException {
+		String filename =  root.getPath() + "/flowDefinitions/" +  ff.getName() + ".flowDefinition";
+		File f = new File(filename);
 		FlowDefinition fd = new FlowDefinition();
-		return serializeXml(filename, fd);
+		return serializeXml(f, fd);
 	}
 	
-	private static File serializeXml(String filename, Object object) throws IOException {
+	private static File serializeXml(File output, Object object) throws IOException {
 		Serializer serializer = new Persister();
-		File output = new File(filename);
 		FileUtils.forceMkdirParent(output);
 		try {
 			serializer.write(object, output);
@@ -145,6 +164,19 @@ public class FlowUtils {
 			e.printStackTrace();
 			throw new IOException("Unable to serialize");
 		}
+	}
+	
+	public static Manifest readOrCreateManifest(File manifestFile) {
+		Manifest manifest = new Manifest();
+		if (manifestFile.exists()) {
+			Serializer serializer = new Persister();
+			try {
+				manifest = serializer.read(Manifest.class, manifestFile);
+			} catch (Exception e) {
+				e.printStackTrace();
+			}
+		} 
+		return manifest;
 	}
 
 }
