@@ -56,7 +56,6 @@ public class FlowUtils {
 	}
 	
 	public static void createFlowDeletionPack(String sourcePath, String outputPath) throws IOException {
-		//String tempPath = "ff-output/3-flows-delete";
 		List<FlowFile> nextVersionFlows = FlowUtils.getFlowFiles(sourcePath + "/flows");
 		FlowUtils.createFlowDeletionPack(outputPath, nextVersionFlows);
 	}
@@ -64,15 +63,6 @@ public class FlowUtils {
 //		List<FlowFile> flowFiles = getFlowFiles(flowPath);
 //		createFlowDeletionPack(outputPath + "/destructiveChanges.xml", flowFiles);
 //	}
-	
-	public static void createFlowInactivationPack(Manifest manifest, String flowPath, String outputPath) throws IOException {
-		List<FlowFile> flowFiles = getFlowFiles(flowPath);
-		File outputRoot = new File(outputPath);
-		createFlowDefinitionManifest(manifest, flowFiles);
-		for (FlowFile flowName : flowFiles) {
-			createInactiveDefinition(outputRoot, flowName);
-		}
-	}
 	
 	private static void createFlowInactivationPack(Manifest manifest, String path, List<FlowFile> flowFiles) throws IOException {
 		File root = new File(path);
@@ -88,9 +78,10 @@ public class FlowUtils {
 		createFlowManifest(root, "package.xml");
 	}
 	
-	public static void createFlowInactivation(String sourcePath, String outputPath) throws IOException {
+	public static void createFlowInactivation(String srcPath, String outputPath) throws IOException {
 		//String downloadPath = "data/src/flows";
 		//String tempPath = "ff-output/2-flows-deactivate";
+		String sourcePath = srcPath + "/flows";
 		String flowsDestinationPath = outputPath + "/flows";
 		
 
@@ -104,7 +95,7 @@ public class FlowUtils {
 		serializeXml(manifestFile, manifest);
 	}
 	
-	public static void createFlowDeletionPack(String path, List<FlowFile> flowFiles) throws IOException {
+	private static void createFlowDeletionPack(String path, List<FlowFile> flowFiles) throws IOException {
 		File root = new File(path);
 		String filePath = root.getPath() + "/" + "destructiveChanges.xml";
 		File manifestFile = new File(filePath);
