@@ -1,7 +1,8 @@
 package com.spaceheroes.xml.sfdc;
 
-import java.util.ArrayList;
+import java.util.HashSet;
 import java.util.List;
+import java.util.Set;
 
 import org.simpleframework.xml.Element;
 import org.simpleframework.xml.ElementList;
@@ -20,7 +21,7 @@ public class ManifestType {
 	}
 	
 	@ElementList(inline=true, name="members", required=false, entry="members")
-	private List<String> members = new ArrayList<String>();
+	private Set<String> members = new HashSet<String>();
 	
 	@Element
 	private String name = "Flow";
@@ -33,11 +34,11 @@ public class ManifestType {
 		this.name = name;
 	}
 
-	public List<String> getMembers() {
+	public Set<String> getMembers() {
 		return members;
 	}
 
-	public void setMembers(List<String> members) {
+	public void setMembers(Set<String> members) {
 		this.members = members;
 	}
 	

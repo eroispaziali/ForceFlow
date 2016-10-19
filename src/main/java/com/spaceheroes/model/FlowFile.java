@@ -31,12 +31,28 @@ public class FlowFile {
 		return destFilename;
 	}
 	
+	public String getFlowName(Integer version) {
+		String destFilename = 
+				(version>0) 
+				? String.format("%s-%d", name, version) 
+				: String.format("%s", name) ;
+		return destFilename;
+	}
+	
 	public String getFilenameCurrentVersion() {
 		return getFilename(version);
 	}
 	
 	public String getFilenameNextVersion() {
 		return getFilename(version+1);
+	}
+	
+	public String getFlowNameCurrentVersion() {
+		return getFlowName(version);
+	}
+	
+	public String getFlowNameNextVersion() {
+		return getFlowName(version+1);
 	}
 
 	public Integer getVersion() {

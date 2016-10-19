@@ -3,7 +3,9 @@ package com.spaceheroes.util;
 import java.io.File;
 import java.io.IOException;
 import java.util.ArrayList;
+import java.util.HashMap;
 import java.util.List;
+import java.util.Map;
 
 import org.apache.commons.io.FileUtils;
 import org.simpleframework.xml.Serializer;
@@ -19,25 +21,36 @@ public class FlowUtils {
 	private static void copyFlowsAndIncreaseVersion(Manifest manifest, String srcPath, String destPath) {
 		File dir = new File(srcPath);
 		File[] directoryFiles = dir.listFiles();
-		ManifestType manifestType = new ManifestType("Flows");
+		ManifestType manifestType = new ManifestType("Flow");
+		Map<String, FlowFile> versionMap = new HashMap<String, FlowFile>();
 		if (directoryFiles != null) {
 			for (File srcFile : directoryFiles) {
 				String srcFilename = srcFile.getName();
 				if (srcFilename.matches(".+(-([0-9]+))?.flow")) {
 					FlowFile ff = new FlowFile(srcFile);
-					manifestType.addMember(ff.getFilenameNextVersion());
-					try {
-						File destFile = new File(destPath + "/" + ff.getFilenameNextVersion());
-						FileUtils.forceMkdirParent(destFile);
-						FileUtils.copyFile(srcFile, destFile);
-					} catch (IOException e) {
-						// ignore
-						e.printStackTrace();
+					String key = ff.getName();
+					FlowFile latestVersion = versionMap.getOrDefault(key, ff);
+					if (ff.getVersion() > latestVersion.getVersion()) {
+						versionMap.put(key, ff);
+					} else {
+						versionMap.put(key, latestVersion);
 					}
 				}
 			}
-			manifest.addType(manifestType);
 		}
+		
+		for (FlowFile ff : versionMap.values()) {
+			manifestType.addMember(ff.getFlowNameNextVersion());
+			try {
+				File destFile = new File(destPath + "/" + ff.getFilenameNextVersion());
+				FileUtils.forceMkdirParent(destFile);
+				FileUtils.copyFile(ff.getFile(), destFile);
+			} catch (IOException e) {
+				// ignore
+				e.printStackTrace();
+			}
+		}
+		manifest.addType(manifestType);
 	}
 	
 	public static List<FlowFile> getFlowFiles(String srcPath) {
@@ -79,8 +92,6 @@ public class FlowUtils {
 	}
 	
 	public static void createFlowInactivation(String srcPath, String outputPath) throws IOException {
-		//String downloadPath = "data/src/flows";
-		//String tempPath = "ff-output/2-flows-deactivate";
 		String sourcePath = srcPath + "/flows";
 		String flowsDestinationPath = outputPath + "/flows";
 		
@@ -88,7 +99,7 @@ public class FlowUtils {
 		List<FlowFile> flowFiles = FlowUtils.getFlowFiles(sourcePath);
 		String manifestFilePath = outputPath + "/package.xml";
 		File manifestFile = new File(manifestFilePath);
-		Manifest manifest = FlowUtils.readOrCreateManifest(manifestFile);
+		Manifest manifest = new Manifest();//FlowUtils.readOrCreateManifest(manifestFile);
 		copyFlowsAndIncreaseVersion(manifest, sourcePath, flowsDestinationPath);
 		createFlowInactivationPack(manifest, outputPath, flowFiles);
 		
