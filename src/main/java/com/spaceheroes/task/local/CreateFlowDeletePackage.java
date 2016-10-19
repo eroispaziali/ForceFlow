@@ -30,5 +30,13 @@ public class CreateFlowDeletePackage extends Task {
 	public void setDestinationPath(String destinationPath) {
 		this.destinationPath = destinationPath;
 	}
+
+	public String getSourcePath() {
+		return sourcePath;
+	}
+
+	public void setSourcePath(String sourcePath) {
+		this.sourcePath = sourcePath;
+	}
 	
 }

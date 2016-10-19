@@ -11,11 +11,12 @@ public class CreateFlowInactivationsPackage extends Task {
 	
 	private String sourcePath;
 	private String destinationPath;
+	private Boolean destructiveChanges = Boolean.FALSE;
 
 	@Override
 	public void execute() throws BuildException {
 		try {
-			FlowUtils.createFlowInactivation(sourcePath, destinationPath);
+			FlowUtils.createFlowInactivation(sourcePath, destinationPath, destructiveChanges);
 		} catch (IOException e) {
 			e.printStackTrace();
 			throw new BuildException(e);
@@ -37,6 +38,14 @@ public class CreateFlowInactivationsPackage extends Task {
 
 	public void setSourcePath(String sourcePath) {
 		this.sourcePath = sourcePath;
+	}
+
+	public Boolean getDestructiveChanges() {
+		return destructiveChanges;
+	}
+
+	public void setDestructiveChanges(Boolean destructiveChanges) {
+		this.destructiveChanges = destructiveChanges;
 	}
 	
 }

@@ -91,19 +91,36 @@ public class FlowUtils {
 		createFlowManifest(root, "package.xml");
 	}
 	
-	public static void createFlowInactivation(String srcPath, String outputPath) throws IOException {
+	public static void createFlowInactivation(String srcPath, String outputPath, boolean createDestructiveChanges) throws IOException {
 		String sourcePath = srcPath + "/flows";
 		String flowsDestinationPath = outputPath + "/flows";
-		
-
 		List<FlowFile> flowFiles = FlowUtils.getFlowFiles(sourcePath);
 		String manifestFilePath = outputPath + "/package.xml";
 		File manifestFile = new File(manifestFilePath);
 		Manifest manifest = new Manifest();//FlowUtils.readOrCreateManifest(manifestFile);
 		copyFlowsAndIncreaseVersion(manifest, sourcePath, flowsDestinationPath);
 		createFlowInactivationPack(manifest, outputPath, flowFiles);
-		
 		serializeXml(manifestFile, manifest);
+		if (createDestructiveChanges) {
+			createFlowDeletionPack(manifest, outputPath);
+		}
+	}
+	
+	
+	
+	private static void createFlowDeletionPack(Manifest existingManifest, String path) throws IOException {
+		File root = new File(path);
+		String filePath = root.getPath() + "/" + "destructiveChangesPost.xml";
+		File manifestFile = new File(filePath);
+		Manifest manifest = readOrCreateManifest(manifestFile);
+		ManifestType manifestType = existingManifest.getType("Flow");
+		manifest.addType(manifestType);
+		serializeXml(manifestFile, manifest);
+		
+		File packageFile = new File(path + "/" + "package.xml");
+		if (!packageFile.exists()) {
+			serializeXml(packageFile, new Manifest());
+		}
 	}
 	
 	private static void createFlowDeletionPack(String path, List<FlowFile> flowFiles) throws IOException {
@@ -114,11 +131,18 @@ public class FlowUtils {
 		ManifestType manifestType = new ManifestType("Flow");
 		if (flowFiles!=null && flowFiles.size()>0) {
 			for (FlowFile ff : flowFiles) {
-				manifestType.addMember(ff.getFilenameCurrentVersion());	
+				manifestType.addMember(ff.getFlowNameCurrentVersion());	
 			}
 		} 
 		manifest.addType(manifestType);
 		serializeXml(manifestFile, manifest);
+		
+		
+		File packageFile = new File(path + "/" + "package.xml");
+		if (!packageFile.exists()) {
+			serializeXml(packageFile, new Manifest());
+		}
+		
 	}
 	
 	private static void createFlowDefinitionManifest(Manifest manifest, List<FlowFile> flowFiles) throws IOException {

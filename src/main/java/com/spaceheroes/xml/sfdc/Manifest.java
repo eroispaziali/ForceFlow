@@ -3,6 +3,7 @@ package com.spaceheroes.xml.sfdc;
 import java.util.ArrayList;
 import java.util.List;
 
+import org.apache.commons.lang3.StringUtils;
 import org.simpleframework.xml.Attribute;
 import org.simpleframework.xml.Element;
 import org.simpleframework.xml.ElementList;
@@ -34,6 +35,15 @@ public class Manifest {
 
 	public List<ManifestType> getTypes() {
 		return types;
+	}
+	
+	public ManifestType getType(String name) {
+		for (ManifestType mt : types) {
+			if (StringUtils.equalsIgnoreCase(name, mt.getName())) {
+				return mt;
+			}
+		}
+		return null;
 	}
 
 	public void setTypes(List<ManifestType> types) {
