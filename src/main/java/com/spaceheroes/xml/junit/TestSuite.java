@@ -1,4 +1,4 @@
-package com.spaceheroes.junit;
+package com.spaceheroes.xml.junit;
 
 import java.util.ArrayList;
 import java.util.List;

@@ -1,0 +1,506 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<Flow xmlns="http://soap.sforce.com/2006/04/metadata">
+    <assignments>
+        <name>myVariable_waitStartTimeAssignment</name>
+        <label>myVariable_waitStartTimeAssignment</label>
+        <locationX>0</locationX>
+        <locationY>0</locationY>
+        <assignmentItems>
+            <assignToReference>myVariable_waitStartTimeVariable</assignToReference>
+            <operator>Assign</operator>
+            <value>
+                <elementReference>$Flow.CurrentDateTime</elementReference>
+            </value>
+        </assignmentItems>
+        <connector>
+            <targetReference>myDecision</targetReference>
+        </connector>
+    </assignments>
+    <decisions>
+        <processMetadataValues>
+            <name>index</name>
+            <value>
+                <numberValue>0.0</numberValue>
+            </value>
+        </processMetadataValues>
+        <name>myDecision</name>
+        <label>myDecision</label>
+        <locationX>50</locationX>
+        <locationY>0</locationY>
+        <defaultConnector>
+            <targetReference>myDecision4</targetReference>
+        </defaultConnector>
+        <defaultConnectorLabel>default</defaultConnectorLabel>
+        <rules>
+            <name>myRule_1</name>
+            <conditionLogic>and</conditionLogic>
+            <conditions>
+                <leftValueReference>formula_myRule_1</leftValueReference>
+                <operator>EqualTo</operator>
+                <rightValue>
+                    <booleanValue>true</booleanValue>
+                </rightValue>
+            </conditions>
+            <connector>
+                <targetReference>myRule_1_A1</targetReference>
+            </connector>
+            <label>Sales Owner is Changed</label>
+        </rules>
+    </decisions>
+    <decisions>
+        <processMetadataValues>
+            <name>index</name>
+            <value>
+                <numberValue>1.0</numberValue>
+            </value>
+        </processMetadataValues>
+        <name>myDecision4</name>
+        <label>myDecision4</label>
+        <locationX>50</locationX>
+        <locationY>0</locationY>
+        <defaultConnectorLabel>default</defaultConnectorLabel>
+        <rules>
+            <name>myRule_5</name>
+            <conditionLogic>and</conditionLogic>
+            <conditions>
+                <leftValueReference>formula_myRule_5</leftValueReference>
+                <operator>EqualTo</operator>
+                <rightValue>
+                    <booleanValue>true</booleanValue>
+                </rightValue>
+            </conditions>
+            <connector>
+                <targetReference>myRule_5_A1</targetReference>
+            </connector>
+            <label>Lead is Disqualified</label>
+        </rules>
+    </decisions>
+    <formulas>
+        <processMetadataValues>
+            <name>originalFormula</name>
+            <value>
+                <stringValue>TODAY() + 1</stringValue>
+            </value>
+        </processMetadataValues>
+        <name>formula_2_myRule_1_A2_ActivityDate</name>
+        <dataType>Date</dataType>
+        <expression>TODAY() + 1</expression>
+    </formulas>
+    <formulas>
+        <processMetadataValues>
+            <name>originalFormula</name>
+            <value>
+                <stringValue>[CampaignMember].Lead.Sales_Owner_Ids__c  &amp; ( [CampaignMember].CampaignId  &amp; [CampaignMember].Sales_Owner__c)
+</stringValue>
+            </value>
+        </processMetadataValues>
+        <name>formula_3_myRule_1_A1_Sales_Owner_Ids_c</name>
+        <dataType>String</dataType>
+        <expression>{!myVariable_current.Lead.Sales_Owner_Ids__c}  &amp; ( {!myVariable_current.CampaignId}  &amp; {!myVariable_current.Sales_Owner__c})</expression>
+    </formulas>
+    <formulas>
+        <processMetadataValues>
+            <name>originalFormula</name>
+            <value>
+                <stringValue>SUBSTITUTE( [CampaignMember].Lead.Sales_Owner_Ids__c   , 
+
+( [CampaignMember].CampaignId  &amp; [CampaignMember].Sales_Owner__c ),&quot;&quot;
+)</stringValue>
+            </value>
+        </processMetadataValues>
+        <name>formula_6_myRule_5_A1_Sales_Owner_Ids_c</name>
+        <dataType>String</dataType>
+        <expression>SUBSTITUTE( {!myVariable_current.Lead.Sales_Owner_Ids__c}   , 
+
+( {!myVariable_current.CampaignId}  &amp; {!myVariable_current.Sales_Owner__c} ),&quot;&quot;
+)</expression>
+    </formulas>
+    <formulas>
+        <processMetadataValues>
+            <name>originalFormula</name>
+            <value>
+                <stringValue>AND(
+OR 
+(ISNEW(),
+ISCHANGED([CampaignMember].Sales_Owner__c )
+),
+NOT(ISBLANK([CampaignMember].Sales_Owner__c )),
+NOT(ISBLANK([CampaignMember].LeadId ))
+)</stringValue>
+            </value>
+        </processMetadataValues>
+        <name>formula_myRule_1</name>
+        <dataType>Boolean</dataType>
+        <expression>AND(
+OR 
+(ISNEW(),
+ISCHANGED({!myVariable_current.Sales_Owner__c} )
+),
+NOT(ISBLANK({!myVariable_current.Sales_Owner__c} )),
+NOT(ISBLANK({!myVariable_current.LeadId} ))
+)</expression>
+    </formulas>
+    <formulas>
+        <processMetadataValues>
+            <name>originalFormula</name>
+            <value>
+                <stringValue>AND(
+OR 
+(ISNEW(),
+ISCHANGED([CampaignMember].Sales_Status2__c)
+),
+ISPICKVAL([CampaignMember].Sales_Status2__c,&quot;Disqualified&quot;),
+NOT(ISBLANK([CampaignMember].LeadId  ))
+)
+</stringValue>
+            </value>
+        </processMetadataValues>
+        <name>formula_myRule_5</name>
+        <dataType>Boolean</dataType>
+        <expression>AND(
+OR 
+(ISNEW(),
+ISCHANGED({!myVariable_current.Sales_Status2__c})
+),
+ISPICKVAL({!myVariable_current.Sales_Status2__c},&quot;Disqualified&quot;),
+NOT(ISBLANK({!myVariable_current.LeadId}  ))
+)</expression>
+    </formulas>
+    <interviewLabel>Update_Lead_when_Campaign_Member_Sales_Owner_is_Updated-31_CampaignMember</interviewLabel>
+    <label>Update Lead when Campaign Member Sales Owner is Updated</label>
+    <processMetadataValues>
+        <name>ObjectType</name>
+        <value>
+            <stringValue>CampaignMember</stringValue>
+        </value>
+    </processMetadataValues>
+    <processMetadataValues>
+        <name>ObjectVariable</name>
+        <value>
+            <elementReference>myVariable_current</elementReference>
+        </value>
+    </processMetadataValues>
+    <processMetadataValues>
+        <name>OldObjectVariable</name>
+        <value>
+            <elementReference>myVariable_old</elementReference>
+        </value>
+    </processMetadataValues>
+    <processMetadataValues>
+        <name>RecursiveCountVariable</name>
+        <value>
+            <elementReference>RecursiveCountVariable</elementReference>
+        </value>
+    </processMetadataValues>
+    <processMetadataValues>
+        <name>TriggerType</name>
+        <value>
+            <stringValue>onAllChanges</stringValue>
+        </value>
+    </processMetadataValues>
+    <processType>Workflow</processType>
+    <recordCreates>
+        <name>myRule_1_A2</name>
+        <label>Task to contact Lead</label>
+        <locationX>100</locationX>
+        <locationY>300</locationY>
+        <connector>
+            <targetReference>myDecision4</targetReference>
+        </connector>
+        <inputAssignments>
+            <processMetadataValues>
+                <name>dataType</name>
+                <value>
+                    <stringValue>Date</stringValue>
+                </value>
+            </processMetadataValues>
+            <processMetadataValues>
+                <name>isRequired</name>
+                <value>
+                    <booleanValue>false</booleanValue>
+                </value>
+            </processMetadataValues>
+            <processMetadataValues>
+                <name>leftHandSideLabel</name>
+                <value>
+                    <stringValue>Due Date Only</stringValue>
+                </value>
+            </processMetadataValues>
+            <processMetadataValues>
+                <name>rightHandSideType</name>
+                <value>
+                    <stringValue>Formula</stringValue>
+                </value>
+            </processMetadataValues>
+            <field>ActivityDate</field>
+            <value>
+                <elementReference>formula_2_myRule_1_A2_ActivityDate</elementReference>
+            </value>
+        </inputAssignments>
+        <inputAssignments>
+            <processMetadataValues>
+                <name>dataType</name>
+                <value>
+                    <stringValue>ID</stringValue>
+                </value>
+            </processMetadataValues>
+            <processMetadataValues>
+                <name>isRequired</name>
+                <value>
+                    <booleanValue>false</booleanValue>
+                </value>
+            </processMetadataValues>
+            <processMetadataValues>
+                <name>leftHandSideLabel</name>
+                <value>
+                    <stringValue>Assigned To ID</stringValue>
+                </value>
+            </processMetadataValues>
+            <processMetadataValues>
+                <name>rightHandSideType</name>
+                <value>
+                    <stringValue>Reference</stringValue>
+                </value>
+            </processMetadataValues>
+            <field>OwnerId</field>
+            <value>
+                <elementReference>myVariable_current.Sales_Owner__c</elementReference>
+            </value>
+        </inputAssignments>
+        <inputAssignments>
+            <processMetadataValues>
+                <name>dataType</name>
+                <value>
+                    <stringValue>String</stringValue>
+                </value>
+            </processMetadataValues>
+            <processMetadataValues>
+                <name>isRequired</name>
+                <value>
+                    <booleanValue>false</booleanValue>
+                </value>
+            </processMetadataValues>
+            <processMetadataValues>
+                <name>leftHandSideLabel</name>
+                <value>
+                    <stringValue>Subject</stringValue>
+                </value>
+            </processMetadataValues>
+            <processMetadataValues>
+                <name>rightHandSideType</name>
+                <value>
+                    <stringValue>String</stringValue>
+                </value>
+            </processMetadataValues>
+            <field>Subject</field>
+            <value>
+                <stringValue>New Prospect</stringValue>
+            </value>
+        </inputAssignments>
+        <inputAssignments>
+            <processMetadataValues>
+                <name>dataType</name>
+                <value>
+                    <stringValue>ID</stringValue>
+                </value>
+            </processMetadataValues>
+            <processMetadataValues>
+                <name>isRequired</name>
+                <value>
+                    <booleanValue>false</booleanValue>
+                </value>
+            </processMetadataValues>
+            <processMetadataValues>
+                <name>leftHandSideLabel</name>
+                <value>
+                    <stringValue>Name ID</stringValue>
+                </value>
+            </processMetadataValues>
+            <processMetadataValues>
+                <name>rightHandSideType</name>
+                <value>
+                    <stringValue>Reference</stringValue>
+                </value>
+            </processMetadataValues>
+            <field>WhoId</field>
+            <value>
+                <elementReference>myVariable_current.LeadId</elementReference>
+            </value>
+        </inputAssignments>
+        <object>Task</object>
+    </recordCreates>
+    <recordUpdates>
+        <processMetadataValues>
+            <name>evaluationType</name>
+            <value>
+                <stringValue>always</stringValue>
+            </value>
+        </processMetadataValues>
+        <processMetadataValues>
+            <name>isChildRelationship</name>
+            <value>
+                <booleanValue>false</booleanValue>
+            </value>
+        </processMetadataValues>
+        <processMetadataValues>
+            <name>reference</name>
+            <value>
+                <stringValue>[CampaignMember].Lead ID</stringValue>
+            </value>
+        </processMetadataValues>
+        <name>myRule_1_A1</name>
+        <label>Update Lead</label>
+        <locationX>100</locationX>
+        <locationY>200</locationY>
+        <connector>
+            <targetReference>myRule_1_A2</targetReference>
+        </connector>
+        <filters>
+            <processMetadataValues>
+                <name>implicit</name>
+                <value>
+                    <booleanValue>true</booleanValue>
+                </value>
+            </processMetadataValues>
+            <field>Id</field>
+            <operator>EqualTo</operator>
+            <value>
+                <elementReference>myVariable_current.LeadId</elementReference>
+            </value>
+        </filters>
+        <inputAssignments>
+            <processMetadataValues>
+                <name>dataType</name>
+                <value>
+                    <stringValue>String</stringValue>
+                </value>
+            </processMetadataValues>
+            <processMetadataValues>
+                <name>isRequired</name>
+                <value>
+                    <booleanValue>false</booleanValue>
+                </value>
+            </processMetadataValues>
+            <processMetadataValues>
+                <name>leftHandSideLabel</name>
+                <value>
+                    <stringValue>Sales Owner Ids</stringValue>
+                </value>
+            </processMetadataValues>
+            <processMetadataValues>
+                <name>rightHandSideType</name>
+                <value>
+                    <stringValue>Formula</stringValue>
+                </value>
+            </processMetadataValues>
+            <field>Sales_Owner_Ids__c</field>
+            <value>
+                <elementReference>formula_3_myRule_1_A1_Sales_Owner_Ids_c</elementReference>
+            </value>
+        </inputAssignments>
+        <object>Lead</object>
+    </recordUpdates>
+    <recordUpdates>
+        <processMetadataValues>
+            <name>evaluationType</name>
+            <value>
+                <stringValue>always</stringValue>
+            </value>
+        </processMetadataValues>
+        <processMetadataValues>
+            <name>isChildRelationship</name>
+            <value>
+                <booleanValue>false</booleanValue>
+            </value>
+        </processMetadataValues>
+        <processMetadataValues>
+            <name>reference</name>
+            <value>
+                <stringValue>[CampaignMember].Lead ID</stringValue>
+            </value>
+        </processMetadataValues>
+        <name>myRule_5_A1</name>
+        <label>Remove Sales Owner ID</label>
+        <locationX>500</locationX>
+        <locationY>200</locationY>
+        <filters>
+            <processMetadataValues>
+                <name>implicit</name>
+                <value>
+                    <booleanValue>true</booleanValue>
+                </value>
+            </processMetadataValues>
+            <field>Id</field>
+            <operator>EqualTo</operator>
+            <value>
+                <elementReference>myVariable_current.LeadId</elementReference>
+            </value>
+        </filters>
+        <inputAssignments>
+            <processMetadataValues>
+                <name>dataType</name>
+                <value>
+                    <stringValue>String</stringValue>
+                </value>
+            </processMetadataValues>
+            <processMetadataValues>
+                <name>isRequired</name>
+                <value>
+                    <booleanValue>false</booleanValue>
+                </value>
+            </processMetadataValues>
+            <processMetadataValues>
+                <name>leftHandSideLabel</name>
+                <value>
+                    <stringValue>Sales Owner Ids</stringValue>
+                </value>
+            </processMetadataValues>
+            <processMetadataValues>
+                <name>rightHandSideType</name>
+                <value>
+                    <stringValue>Formula</stringValue>
+                </value>
+            </processMetadataValues>
+            <field>Sales_Owner_Ids__c</field>
+            <value>
+                <elementReference>formula_6_myRule_5_A1_Sales_Owner_Ids_c</elementReference>
+            </value>
+        </inputAssignments>
+        <object>Lead</object>
+    </recordUpdates>
+    <startElementReference>myVariable_waitStartTimeAssignment</startElementReference>
+    <variables>
+        <name>myVariable_current</name>
+        <dataType>SObject</dataType>
+        <isCollection>false</isCollection>
+        <isInput>true</isInput>
+        <isOutput>true</isOutput>
+        <objectType>CampaignMember</objectType>
+    </variables>
+    <variables>
+        <name>myVariable_old</name>
+        <dataType>SObject</dataType>
+        <isCollection>false</isCollection>
+        <isInput>true</isInput>
+        <isOutput>false</isOutput>
+        <objectType>CampaignMember</objectType>
+    </variables>
+    <variables>
+        <name>myVariable_waitStartTimeVariable</name>
+        <dataType>DateTime</dataType>
+        <isCollection>false</isCollection>
+        <isInput>false</isInput>
+        <isOutput>false</isOutput>
+        <value>
+            <elementReference>$Flow.CurrentDateTime</elementReference>
+        </value>
+    </variables>
+    <variables>
+        <name>RecursiveCountVariable</name>
+        <dataType>Number</dataType>
+        <isCollection>false</isCollection>
+        <isInput>true</isInput>
+        <isOutput>false</isOutput>
+        <scale>2</scale>
+    </variables>
+</Flow>

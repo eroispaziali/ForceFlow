@@ -1,4 +1,4 @@
-package com.spaceheroes.junit;
+package com.spaceheroes.xml.junit;
 
 import org.simpleframework.xml.Attribute;
 import org.simpleframework.xml.Root;
