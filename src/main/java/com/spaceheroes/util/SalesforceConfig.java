@@ -1,5 +1,7 @@
 package com.spaceheroes.util;
 
+import org.apache.commons.lang3.StringUtils;
+
 public class SalesforceConfig {
 	
 	private String username;
@@ -10,13 +12,7 @@ public class SalesforceConfig {
 	public SalesforceConfig(String username, String password, String serverUrl) {
 		this.username = username;
 		this.password = password;
-		this.serverUrl = serverUrl;
-	}
-	
-	public SalesforceConfig(String username, String password) {
-		this.username = username;
-		this.password = password;
-		this.serverUrl = "login.salesforce.com";
+		setServerUrl(serverUrl);
 	}
 	
 	public String getUsername() {
@@ -40,7 +36,11 @@ public class SalesforceConfig {
 	}
 
 	public void setServerUrl(String serverUrl) {
-		this.serverUrl = serverUrl;
+		if (StringUtils.startsWithAny(serverUrl, "http://", "https://")) {
+			this.serverUrl = StringUtils.substringAfter(serverUrl, "://");
+		} else {
+			this.serverUrl = serverUrl;
+		}
 	}
 
 	public String getApiVersion() {
