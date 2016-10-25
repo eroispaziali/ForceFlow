@@ -98,7 +98,9 @@ It's possible to use ForceFlow in composition with the Force Migration Tool to d
     <delete dir="temp"/>
 
     <!-- retrieve existing flows -->
-    <ff:createFlowRetrieveManifest destinationPath="temp/existing" />
+    <ff:createFlowRetrieveAllManifest 
+    	destinationPath="temp/existing" />
+    
     <sf:retrieve 
         username="${sf.username}" 
         password="${sf.password}" 
@@ -110,6 +112,7 @@ It's possible to use ForceFlow in composition with the Force Migration Tool to d
     <ff:createFlowInactivateManifest 
         sourcePath="temp/existing"  
         destinationPath="temp/inactivation" />
+        
     <sf:deploy 
         username="${sf.username}" 
         password="${sf.password}" 
