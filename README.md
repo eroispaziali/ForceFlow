@@ -90,6 +90,7 @@ Generates a full test report in the JUnit XML format (output file: _test-report.
 ```
 
 ### Deactivate flows
+It's possible to use ForceFlow in composition with the Force Migration Tool to deactivate all flows in a Salesforce organisation.
 
 ```XML
 <target name="deactivateFlows">
