@@ -8,6 +8,7 @@ import org.apache.tools.ant.BuildException;
 
 import com.sforce.soap.apex.ExecuteAnonymousResult;
 import com.sforce.soap.apex.SoapConnection;
+import com.sforce.soap.partner.fault.LoginFault;
 import com.sforce.ws.ConnectionException;
 import com.spaceheroes.util.ConnectionFactory;
 
@@ -29,6 +30,8 @@ public class RunApexTask extends SalesforceTask {
 				String error = result.isCompiled() ? result.getExceptionMessage() : result.getCompileProblem();
 				throw new BuildException(error);
 			}
+		} catch (LoginFault e) {
+			throw new BuildException("Unable to connect to Salesforce: " + e.getExceptionMessage(), e);
 		} catch (ConnectionException e) {
 			throw new BuildException("Unable to connect to Salesforce", e);
 		}
