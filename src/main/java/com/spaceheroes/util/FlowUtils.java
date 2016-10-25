@@ -18,15 +18,19 @@ import com.spaceheroes.xml.sfdc.ManifestType;
 
 public class FlowUtils {
 	
+	private static final String METADATA_TYPE_FLOW = "Flow";
+	private static final String METADATA_TYPE_FLOWDEFINITION = "FlowDefinition";
+	private static final String FLOW_FILENAME_PATTERN = ".+(-([0-9]+))?.flow";
+	
 	private static void copyFlowsAndIncreaseVersion(Manifest manifest, String srcPath, String destPath) {
 		File dir = new File(srcPath);
 		File[] directoryFiles = dir.listFiles();
-		ManifestType manifestType = new ManifestType("Flow");
+		ManifestType manifestType = new ManifestType(METADATA_TYPE_FLOW);
 		Map<String, FlowFile> versionMap = new HashMap<String, FlowFile>();
 		if (directoryFiles != null) {
 			for (File srcFile : directoryFiles) {
 				String srcFilename = srcFile.getName();
-				if (srcFilename.matches(".+(-([0-9]+))?.flow")) {
+				if (srcFilename.matches(FLOW_FILENAME_PATTERN)) {
 					FlowFile ff = new FlowFile(srcFile);
 					String key = ff.getName();
 					FlowFile latestVersion = versionMap.getOrDefault(key, ff);
@@ -60,7 +64,7 @@ public class FlowUtils {
 		if (directoryFiles != null) {
 			for (File srcFile : directoryFiles) {
 				String srcFilename = srcFile.getName();
-				if (srcFilename.matches(".+(-([0-9]+))?.flow")) {
+				if (srcFilename.matches(FLOW_FILENAME_PATTERN)) {
 					flowFiles.add(new FlowFile(srcFile));
 				}
 			}
@@ -93,7 +97,7 @@ public class FlowUtils {
 		List<FlowFile> flowFiles = FlowUtils.getFlowFiles(sourcePath);
 		String manifestFilePath = outputPath + "/package.xml";
 		File manifestFile = new File(manifestFilePath);
-		Manifest manifest = new Manifest();//FlowUtils.readOrCreateManifest(manifestFile);
+		Manifest manifest = new Manifest();
 		copyFlowsAndIncreaseVersion(manifest, sourcePath, flowsDestinationPath);
 		createFlowInactivationPack(manifest, outputPath, flowFiles);
 		serializeXml(manifestFile, manifest);
@@ -107,7 +111,7 @@ public class FlowUtils {
 		String filePath = root.getPath() + "/" + "destructiveChangesPost.xml";
 		File manifestFile = new File(filePath);
 		Manifest manifest = readOrCreateManifest(manifestFile);
-		ManifestType manifestType = existingManifest.getType("Flow");
+		ManifestType manifestType = existingManifest.getType(METADATA_TYPE_FLOW);
 		manifest.addType(manifestType);
 		serializeXml(manifestFile, manifest);
 		
@@ -122,7 +126,7 @@ public class FlowUtils {
 		String filePath = root.getPath() + "/" + "destructiveChanges.xml";
 		File manifestFile = new File(filePath);
 		Manifest manifest = readOrCreateManifest(manifestFile);
-		ManifestType manifestType = new ManifestType("Flow");
+		ManifestType manifestType = new ManifestType(METADATA_TYPE_FLOW);
 		if (flowFiles!=null && flowFiles.size()>0) {
 			for (FlowFile ff : flowFiles) {
 				manifestType.addMember(ff.getFlowNameCurrentVersion());	
@@ -140,7 +144,7 @@ public class FlowUtils {
 	}
 	
 	private static void createFlowDefinitionManifest(Manifest manifest, List<FlowFile> flowFiles) throws IOException {
-		ManifestType flowDefinitions = new ManifestType("FlowDefinition");
+		ManifestType flowDefinitions = new ManifestType(METADATA_TYPE_FLOWDEFINITION);
 		for (FlowFile ff : flowFiles) {
 			flowDefinitions.addMember(ff.getName());	
 		}
@@ -155,7 +159,7 @@ public class FlowUtils {
 		String filePath = root.getPath() + "/" + filename;
 		File file = new File(filePath);
 		Manifest manifest = readOrCreateManifest(file);
-		ManifestType manifestType = new ManifestType("Flow");
+		ManifestType manifestType = new ManifestType(METADATA_TYPE_FLOW);
 		if (flowFiles!=null && flowFiles.size()>0) {
 			for (FlowFile ff : flowFiles) {
 				manifestType.addMember(ff.getName());	

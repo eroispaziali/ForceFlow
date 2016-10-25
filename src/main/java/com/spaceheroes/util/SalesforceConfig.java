@@ -5,7 +5,7 @@ public class SalesforceConfig {
 	private String username;
 	private String password;
 	private String serverUrl;
-	private String apiVersion = "34.0";
+	private String apiVersion = "37.0";
 
 	public SalesforceConfig(String username, String password, String serverUrl) {
 		this.username = username;
