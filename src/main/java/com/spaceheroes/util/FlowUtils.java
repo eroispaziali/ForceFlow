@@ -72,10 +72,6 @@ public class FlowUtils {
 		List<FlowFile> nextVersionFlows = FlowUtils.getFlowFiles(sourcePath + "/flows");
 		FlowUtils.createFlowDeletionPack(outputPath, nextVersionFlows);
 	}
-//	public static void createFlowDeletionPack(String flowPath, String outputPath) throws IOException {
-//		List<FlowFile> flowFiles = getFlowFiles(flowPath);
-//		createFlowDeletionPack(outputPath + "/destructiveChanges.xml", flowFiles);
-//	}
 	
 	private static void createFlowInactivationPack(Manifest manifest, String path, List<FlowFile> flowFiles) throws IOException {
 		File root = new File(path);
@@ -105,8 +101,6 @@ public class FlowUtils {
 			createFlowDeletionPack(manifest, outputPath);
 		}
 	}
-	
-	
 	
 	private static void createFlowDeletionPack(Manifest existingManifest, String path) throws IOException {
 		File root = new File(path);
