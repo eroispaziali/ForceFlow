@@ -15,9 +15,8 @@
     <typedef name="runtests" classname="com.spaceheroes.task.RunTestsTask"/>
     
     <!-- Flows -->
-    <typedef name="createFlowRetrieveAllManifest" classname="com.spaceheroes.task.local.CreateRetrieveAllFlowsPackage"/>
-    <typedef name="createFlowInactivateManifest" classname="com.spaceheroes.task.local.CreateFlowInactivationsPackage"/>
-    <typedef name="createFlowDeleteManifest" classname="com.spaceheroes.task.local.CreateFlowDeletePackage"/>
-    
+    <typedef name="createFlowRetrieveManifest" classname="com.spaceheroes.task.local.CreateFlowRetrieveManifestTask"/>
+    <typedef name="createFlowInactivateManifest" classname="com.spaceheroes.task.local.CreateFlowInactivateManifestTask"/>
+    <typedef name="createFlowDeleteManifest" classname="com.spaceheroes.task.local.CreateFlowDeleteManifestTask"/>
     
 </antlib>

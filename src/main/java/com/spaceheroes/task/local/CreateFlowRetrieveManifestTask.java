@@ -7,15 +7,14 @@ import org.apache.tools.ant.Task;
 
 import com.spaceheroes.util.FlowUtils;
 
-public class CreateFlowDeletePackage extends Task {
+public class CreateFlowRetrieveManifestTask extends Task {
 	
-	private String sourcePath;
 	private String destinationPath;
 
 	@Override
 	public void execute() throws BuildException {
 		try {
-			FlowUtils.createFlowDeletionPack(sourcePath, destinationPath);
+			FlowUtils.createFlowDownloadAllPack(destinationPath);
 		} catch (IOException e) {
 			e.printStackTrace();
 			throw new BuildException(e);
@@ -29,14 +28,6 @@ public class CreateFlowDeletePackage extends Task {
 
 	public void setDestinationPath(String destinationPath) {
 		this.destinationPath = destinationPath;
-	}
-
-	public String getSourcePath() {
-		return sourcePath;
-	}
-
-	public void setSourcePath(String sourcePath) {
-		this.sourcePath = sourcePath;
 	}
 	
 }
