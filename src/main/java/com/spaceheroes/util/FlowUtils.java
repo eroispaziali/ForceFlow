@@ -85,8 +85,12 @@ public class FlowUtils {
 		}
 	}
 	
-	// public
-	public static void createFlowDownloadAllPack(String path) throws IOException {
+	/**
+	 * Creates a manifest file (package.xml) that can be used with the Force.com Migration Tool to retrieve all Flows from an org.
+	 * @param path the relative path where the manifest file should be created
+	 * @throws IOException if the manifest file cannot be created
+	 */
+	public static void createRetrieveAllFlowsManifest(String path) throws IOException {
 		File root = new File(path);
 		createFlowManifest(root, "package.xml");
 	}

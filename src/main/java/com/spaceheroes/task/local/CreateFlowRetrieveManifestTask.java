@@ -14,7 +14,7 @@ public class CreateFlowRetrieveManifestTask extends Task {
 	@Override
 	public void execute() throws BuildException {
 		try {
-			FlowUtils.createFlowDownloadAllPack(destinationPath);
+			FlowUtils.createRetrieveAllFlowsManifest(destinationPath);
 		} catch (IOException e) {
 			e.printStackTrace();
 			throw new BuildException(e);
