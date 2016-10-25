@@ -97,7 +97,9 @@ Generates a full test report in the JUnit XML format (output file: _test-report.
     <delete dir="temp"/>
 
     <!-- retrieve existing flows -->
-    <ff:createFlowRetrieveAllManifest destinationPath="temp/existing" />
+    <ff:createFlowRetrieveAllManifest 
+    	destinationPath="temp/existing" />
+    
     <sf:retrieve 
         username="${sf.username}" 
         password="${sf.password}" 
@@ -109,6 +111,7 @@ Generates a full test report in the JUnit XML format (output file: _test-report.
     <ff:createFlowInactivateManifest 
         sourcePath="temp/existing"  
         destinationPath="temp/inactivation" />
+        
     <sf:deploy 
         username="${sf.username}" 
         password="${sf.password}" 
