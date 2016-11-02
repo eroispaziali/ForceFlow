@@ -97,7 +97,8 @@ It's possible to use ForceFlow in composition with the Force Migration Tool to d
        
     <delete dir="temp"/>
 
-    <!-- retrieve existing flows -->
+    <!-- Retrieve all the existing flows from the target org -->
+    
     <ff:createFlowRetrieveAllManifest 
     	destinationPath="temp/existing" />
     
@@ -108,7 +109,9 @@ It's possible to use ForceFlow in composition with the Force Migration Tool to d
         retrieveTarget="temp/existing" 
         unpackaged="temp/existing/package.xml"/>
 
-    <!-- create a manifest to inactivate all the flows, then deploy it -->
+    <!-- ForceFlow can then create an ad-hoc package to inactivate all the flows.
+    	 such package can be deployed using the Force.com migration tool -->
+	 
     <ff:createFlowInactivateManifest 
         sourcePath="temp/existing"  
         destinationPath="temp/inactivation" />
@@ -121,6 +124,41 @@ It's possible to use ForceFlow in composition with the Force Migration Tool to d
 
     <delete dir="temp"/>
 </target>
+```
+### Delete Flows
+It's possible to create an extra task that deletes flows. Bare in mind deactivation is required before deleting flows, so the two targets should be chained.
+
+```XML
+<target name="deleteFlows" depends="deactivateFlows">
+
+	<delete dir="temp"/>
+	
+	<!-- Retrieve all the existing flows from the target org -->
+	
+	<ff:createFlowRetrieveAllManifest destinationPath="temp/existing" />
+	<sf:retrieve 
+		username="${sf.username}" 
+		password="${sf.password}" 
+		serverurl="${sf.serverurl}" 
+		retrieveTarget="temp/existing" 
+		unpackaged="temp/existing/package.xml" />
+
+    <!-- ForceFlow can then create an ad-hoc destructiveChanges to delete all the flows.
+    	 such destructive package can be deployed using the Force.com migration tool -->
+
+        <ff:createFlowDeleteManifest 
+		sourcePath="temp/existing" 
+		destinationPath="temp/delete" />
+        
+	<sf:deploy 
+		username="${sf.username}" 
+		password="${sf.password}" 
+		serverurl="${sf.serverurl}" 
+		deployRoot="temp/delete" 
+		ignoreWarnings="true" />
+	
+        <delete dir="temp"/>
+    </target>
 ```
 
 ## License
