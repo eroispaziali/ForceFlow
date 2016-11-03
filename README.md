@@ -7,7 +7,7 @@ It is built on top of [Apache Ant](http://ant.apache.org/), so it can be used in
 * Execute Apex code
 * Run Apex tests (with XML reports)
 * Insert and delete records
-* Support for flow deactivation and deletion
+* Support for flow deactivation and deletion (in conjunction with the Force.com migration tool)
 
 ## Usage
 ### Create a build file
