@@ -60,11 +60,17 @@ Use this tag to abort all the jobs that are currently scheduled.
 ```XML
 <ff:clearschedule username="..." password="..." serverurl="..." /> 	
 ```
+Use this tag to abort specific jobs that are currently scheduled. 
+```XML
+<ff:clearschedule scheduleName="..." username="..." password="..." serverurl="..." />  
+```
 
 ### Schedule an Apex job
 You can use this task to schedule the execution of a batch class.
 ```XML
-<ff:scheduleapex username="..." password="..." serverurl="..." className="MySchedulableClass" cron="0 0 12 1/1 * ? *" />	
+<ff:scheduleapex username="..." password="..." serverurl="..." className="MySchedulableClass" cron="0 0 12 1/1 * ? *" />
+or
+<ff:scheduleapex username="..." password="..." serverurl="..." scheduleName="..." className="MySchedulableClass" cron="0 0 12 1/1 * ? *" />    
 ```
 
 ### Insert a record
