@@ -38,7 +38,7 @@ public class ScheduleJobTask extends SalesforceTask {
 			SoapConnection tc = ConnectionFactory.getToolingConnection(getConfig());
 			String apexCode = String.format(SCHEDULE_APEX, className, className, scheduleName, cron);
 			executeApex(tc, apexCode);
-			log(String.format("%s has been scheduled",className));
+			log(String.format("%s has been scheduled",scheduleName));
 		} catch (ConnectionException e) {
 			handleException(e);
 		}
